@@ -1,0 +1,10 @@
+{
+  "hero": {
+    "title": "Halo Ring",
+    "subtitle": "Welcome to the project",
+    "cta": {
+      "label": "Get started",
+      "href": "/dashboard"
+    }
+  }
+}

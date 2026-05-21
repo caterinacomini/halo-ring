@@ -1,0 +1,57 @@
+@use 'variables' as *;
+
+// Mobile-first breakpoint mixin
+@mixin breakpoint($screen) {
+  @media (min-width: $screen) {
+    @content;
+  }
+}
+
+@mixin breakpoint-sm {
+  @media (min-width: $screen-sm) { @content; }
+}
+
+@mixin breakpoint-md {
+  @media (min-width: $screen-md) { @content; }
+}
+
+@mixin breakpoint-lg {
+  @media (min-width: $screen-lg) { @content; }
+}
+
+@mixin breakpoint-xl {
+  @media (min-width: $screen-xl) { @content; }
+}
+
+// Flex helpers
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+// Visually hidden (a11y)
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// Truncate text
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

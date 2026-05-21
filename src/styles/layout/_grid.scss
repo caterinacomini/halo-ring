@@ -1,0 +1,16 @@
+@use '../abstracts' as *;
+
+.container {
+  width: 100%;
+  padding-inline: $spacing-md;
+  margin-inline: auto;
+
+  @include breakpoint-sm {
+    padding-inline: $spacing-xl;
+  }
+
+  @include breakpoint-lg {
+    max-width: rem-calc(1280);
+    padding-inline: $spacing-2xl;
+  }
+}
