@@ -1,9 +1,15 @@
+'use client';
+
+import dynamic from 'next/dynamic';
+
+const HeroScene = dynamic(() => import('@/components/HeroScene'), { ssr: false });
+
 export default function Home() {
   return (
     <main>
-      <div className="container">
-        <h1>Halo Ring</h1>
-      </div>
+      <section style={{ height: '200vh' }}>
+        <HeroScene />
+      </section>
     </main>
   );
 }
