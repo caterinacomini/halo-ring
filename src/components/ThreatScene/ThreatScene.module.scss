@@ -1,0 +1,93 @@
+@use '@/styles/abstracts' as *;
+
+// Scroll container — sets the scroll distance
+.section {
+  position: relative;
+  height: 300vh;
+  background: #fdf8f0;
+}
+
+// Sticky panel — the visible viewport-sized layer
+.panel {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.eyebrow {
+  position: absolute;
+  top: rem-calc(48);
+  left: rem-calc(48);
+  display: flex;
+  align-items: center;
+  gap: rem-calc(16);
+}
+
+.eyebrow__tag {
+  font-family: var(--font-mono);
+  font-size: rem-calc(9);
+  letter-spacing: 0.3em;
+  color: rgba(0, 0, 0, 0.25);
+}
+
+.eyebrow__text {
+  font-family: var(--font-mono);
+  font-size: rem-calc(9);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.svg {
+  width: 100%;
+  height: rem-calc(300);
+  display: block;
+  flex-shrink: 0;
+}
+
+.cortisol {
+  position: absolute;
+  top: 50%;
+  right: rem-calc(80);
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: rem-calc(4);
+  pointer-events: none;
+}
+
+.cortisol__value {
+  font-family: var(--font-serif);
+  font-size: rem-calc(56);
+  font-weight: 300;
+  line-height: 1;
+  color: rgba(160, 60, 30, 0.82);
+  letter-spacing: -0.02em;
+}
+
+.cortisol__label {
+  font-family: var(--font-mono);
+  font-size: rem-calc(9);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(160, 60, 30, 0.5);
+}
+
+.descriptor {
+  position: absolute;
+  bottom: rem-calc(52);
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-serif);
+  font-size: rem-calc(22);
+  font-weight: 300;
+  font-style: italic;
+  color: rgba(0, 0, 0, 0.28);
+  white-space: nowrap;
+}

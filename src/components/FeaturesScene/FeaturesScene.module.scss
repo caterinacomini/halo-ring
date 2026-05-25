@@ -1,0 +1,142 @@
+@use '@/styles/abstracts' as *;
+
+.section {
+  position: relative;
+  height: 320vh;
+  background: #fdf8f0;
+}
+
+.panel {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.eyebrow {
+  position: absolute;
+  top: rem-calc(48);
+  left: rem-calc(48);
+  display: flex;
+  align-items: center;
+  gap: rem-calc(16);
+  z-index: 2;
+}
+
+.eyebrow__tag {
+  font-family: var(--font-mono);
+  font-size: rem-calc(9);
+  letter-spacing: 0.3em;
+  color: rgba(0, 0, 0, 0.25);
+}
+
+.eyebrow__text {
+  font-family: var(--font-mono);
+  font-size: rem-calc(9);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: rem-calc(80) rem-calc(48) rem-calc(48);
+
+  @include breakpoint-sm {
+    padding: rem-calc(80) 8vw rem-calc(48);
+  }
+}
+
+.sectionTitle {
+  font-family: var(--font-serif);
+  font-size: clamp(rem-calc(36), 4.5vw, rem-calc(64));
+  font-weight: 300;
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+  color: rgba(20, 18, 16, 0.88);
+  margin: 0 0 rem-calc(40);
+
+  em {
+    font-style: italic;
+    color: rgba(20, 18, 16, 0.32);
+  }
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  position: relative;
+}
+
+// The SVG line separator — height 1px, stretched full width
+.item__lineSvg {
+  width: 100%;
+  height: 1px;
+  display: block;
+  overflow: visible;
+}
+
+.item__row {
+  display: flex;
+  align-items: center;
+  gap: rem-calc(20);
+  padding: rem-calc(20) 0 rem-calc(16);
+}
+
+.item__num {
+  font-family: var(--font-mono);
+  font-size: rem-calc(9);
+  letter-spacing: 0.3em;
+  color: rgba(0, 0, 0, 0.22);
+  flex-shrink: 0;
+  width: rem-calc(20);
+}
+
+.item__icon {
+  font-size: rem-calc(14);
+  color: rgba(0, 0, 0, 0.4);
+  flex-shrink: 0;
+  width: rem-calc(20);
+  text-align: center;
+}
+
+.item__content {
+  display: flex;
+  align-items: baseline;
+  gap: rem-calc(28);
+  flex: 1;
+
+  @include breakpoint-sm {
+    gap: rem-calc(48);
+  }
+}
+
+.item__title {
+  font-family: var(--font-serif);
+  font-size: rem-calc(20);
+  font-weight: 300;
+  color: rgba(20, 18, 16, 0.88);
+  margin: 0;
+  flex-shrink: 0;
+  min-width: rem-calc(220);
+}
+
+.item__body {
+  font-family: var(--font-mono);
+  font-size: rem-calc(10);
+  line-height: 1.55;
+  letter-spacing: 0.04em;
+  color: rgba(20, 18, 16, 0.42);
+  margin: 0;
+  max-width: rem-calc(320);
+}
