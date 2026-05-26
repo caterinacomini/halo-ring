@@ -1,0 +1,148 @@
+@use '@/styles/abstracts' as *;
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: rem-calc(32) rem-calc(48) rem-calc(48);
+
+  @include breakpoint-sm {
+    padding: rem-calc(40) 8vw rem-calc(56);
+  }
+}
+
+// ── Navbar ──────────────────────────────────────────────────────
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: rem-calc(16);
+  pointer-events: auto;
+}
+
+.navbar__logo {
+  display: inline-flex;
+  align-items: center;
+  gap: rem-calc(10);
+  color: rgba(0, 0, 0, 0.45);
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+
+  &:hover { opacity: 0.7; }
+}
+
+.navbar__mark {
+  display: block;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.navbar__wordmark {
+  font-size: rem-calc(11);
+  letter-spacing: 0.3em;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  color: inherit;
+}
+
+.navbar__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: rem-calc(10);
+  padding: rem-calc(10) rem-calc(20);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.55);
+  color: rgba(255, 255, 255, 0.88);
+  font-family: var(--font-mono);
+  font-size: rem-calc(11);
+  letter-spacing: 0.18em;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: background 0.25s ease, transform 0.15s ease;
+
+  &:hover {
+    background: rgba(122, 114, 192, 0.75);
+  }
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+.navbar__ctaArrow {
+  display: block;
+  transition: transform 0.25s ease;
+
+  .navbar__cta:hover & {
+    transform: translate(2px, -2px);
+  }
+}
+
+// ── Bottom block ─────────────────────────────────────────────────
+.bottom {
+  display: flex;
+  flex-direction: column;
+  gap: rem-calc(12);
+}
+
+.eyebrow {
+  font-size: rem-calc(10);
+  letter-spacing: 0.22em;
+  color: rgba(0, 0, 0, 0.25);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: clamp(rem-calc(72), 12vw, rem-calc(160));
+  font-weight: 300;
+  line-height: 0.88;
+  letter-spacing: -0.02em;
+  color: rgba(0, 0, 0, 0.62);
+
+  em {
+    font-style: italic;
+    color: rgba(0, 0, 0, 0.22);
+  }
+}
+
+.sub {
+  font-size: rem-calc(10);
+  letter-spacing: 0.18em;
+  color: rgba(0, 0, 0, 0.22);
+  font-family: var(--font-mono);
+}
+
+// ── Scroll hint ──────────────────────────────────────────────────
+.scrollHint {
+  position: absolute;
+  bottom: rem-calc(48);
+  right: 8vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: rem-calc(8);
+}
+
+.scrollHint__label {
+  font-size: rem-calc(9);
+  letter-spacing: 0.3em;
+  color: rgba(0, 0, 0, 0.18);
+  font-family: var(--font-mono);
+  writing-mode: vertical-rl;
+}
+
+.scrollHint__line {
+  width: 1px;
+  height: rem-calc(44);
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), transparent);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.3; }
+  50%       { opacity: 1; }
+}

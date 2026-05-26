@@ -52,12 +52,6 @@ export default function SpecsScene() {
 
   return (
     <section ref={sectionRef} className={styles.section} aria-label="Specs">
-      {/* Eyebrow */}
-      <div className={styles.eyebrow}>
-        <span className={styles.eyebrow__tag}>06</span>
-        <span className={styles.eyebrow__text}>Specifiche</span>
-      </div>
-
       <div className={styles.grid}>
         {SPECS.map((s, i) => (
           <div

@@ -74,10 +74,6 @@ export default function MuseumScene() {
 
         {/* Copy */}
         <div ref={copyRef} className={styles.copy} style={{ opacity: 0 }}>
-          <p className={styles.eyebrow}>
-            <span className={styles.eyebrow__tag}>04</span>
-            <span className={styles.eyebrow__text}>Obsidian Edition</span>
-          </p>
           <h2 className={styles.headline}>
             Il silenzio ha una forma.<br />
             <em>500 esemplari.</em>

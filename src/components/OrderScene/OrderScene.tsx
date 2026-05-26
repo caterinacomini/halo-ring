@@ -53,10 +53,6 @@ export default function OrderScene() {
       <div ref={innerRef} className={styles.inner} style={{ opacity: 0 }}>
         {/* Left: narrative */}
         <div className={styles.narrative}>
-          <p className={styles.eyebrow}>
-            <span className={styles.eyebrow__tag}>07</span>
-            <span className={styles.eyebrow__text}>Pre-ordine fondatore</span>
-          </p>
           <h2 className={styles.headline}>
             500 anelli.<br />
             <em>Quale è il tuo?</em>

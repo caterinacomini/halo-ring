@@ -96,11 +96,6 @@ export default function FeaturesScene() {
   return (
     <section ref={sectionRef} className={styles.section} aria-label="Features">
       <div className={styles.panel}>
-        <div className={styles.eyebrow}>
-          <span className={styles.eyebrow__tag}>05</span>
-          <span className={styles.eyebrow__text}>Tecnologia</span>
-        </div>
-
         <div className={styles.inner}>
           <h2 className={styles.sectionTitle}>
             Ogni dettaglio,<br /><em>deliberato.</em>

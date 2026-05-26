@@ -5,6 +5,7 @@
   background: #fdf8f0;
   padding: rem-calc(120) rem-calc(48) rem-calc(80);
   overflow: hidden;
+  z-index: 30;
 
   @include breakpoint-sm {
     padding: rem-calc(120) 8vw rem-calc(80);
@@ -57,7 +58,7 @@
   font-weight: 300;
   line-height: 1;
   letter-spacing: -0.03em;
-  color: rgba(20, 18, 16, 0.88);
+  color: rgba(20, 18, 16, 0.65);
 }
 
 .card__label {
@@ -65,7 +66,7 @@
   font-size: rem-calc(9);
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: rgba(20, 18, 16, 0.5);
+  color: rgba(20, 18, 16, 0.35);
 }
 
 .card__unit {
@@ -73,7 +74,7 @@
   font-size: rem-calc(8.5);
   letter-spacing: 0.22em;
   text-transform: lowercase;
-  color: rgba(20, 18, 16, 0.28);
+  color: rgba(20, 18, 16, 0.18);
 }
 
 .divider {

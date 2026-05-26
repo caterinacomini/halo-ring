@@ -3,7 +3,6 @@
 import dynamic from 'next/dynamic';
 import HeroOverlay from '@/components/HeroOverlay';
 import ThreatScene from '@/components/ThreatScene';
-import AnticipationScene from '@/components/AnticipationScene';
 import MuseumScene from '@/components/MuseumScene';
 import FeaturesScene from '@/components/FeaturesScene';
 import SpecsScene from '@/components/SpecsScene';
@@ -20,11 +19,8 @@ export default function Home() {
         <HeroOverlay />
       </section>
 
-      {/* S2 — THE THREAT */}
+      {/* S2+3 — SIGNAL (threat → anticipation in one scene) */}
       <ThreatScene />
-
-      {/* S3 — THE ANTICIPATION */}
-      <AnticipationScene />
 
       {/* S4 — MUSEUM */}
       <MuseumScene />

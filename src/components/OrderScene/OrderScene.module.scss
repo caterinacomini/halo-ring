@@ -5,6 +5,7 @@
   background: #fdf8f0;
   padding: rem-calc(100) rem-calc(48) rem-calc(0);
   overflow: hidden;
+  z-index: 30;
 
   @include breakpoint-sm {
     padding: rem-calc(120) 8vw rem-calc(0);
@@ -60,12 +61,12 @@
   font-weight: 300;
   line-height: 1.05;
   letter-spacing: -0.02em;
-  color: rgba(20, 18, 16, 0.9);
+  color: rgba(20, 18, 16, 0.65);
   margin: 0;
 
   em {
     font-style: italic;
-    color: rgba(20, 18, 16, 0.38);
+    color: rgba(20, 18, 16, 0.26);
   }
 }
 
@@ -74,7 +75,7 @@
   font-size: rem-calc(10);
   line-height: 1.7;
   letter-spacing: 0.04em;
-  color: rgba(20, 18, 16, 0.45);
+  color: rgba(20, 18, 16, 0.22);
   margin: 0;
 }
 
@@ -92,7 +93,7 @@
   font-size: rem-calc(48);
   font-weight: 300;
   line-height: 1;
-  color: rgba(20, 18, 16, 0.88);
+  color: rgba(20, 18, 16, 0.65);
   letter-spacing: -0.02em;
 }
 
@@ -101,7 +102,7 @@
   font-size: rem-calc(9);
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: rgba(20, 18, 16, 0.32);
+  color: rgba(20, 18, 16, 0.22);
 }
 
 // ── Right form ───────────────────────────────────────────────────
@@ -133,7 +134,7 @@
 .form__input {
   font-family: var(--font-mono);
   font-size: rem-calc(13);
-  color: rgba(20, 18, 16, 0.88);
+  color: rgba(20, 18, 16, 0.65);
   background: transparent;
   border: none;
   border-bottom: 1px solid rgba(20, 18, 16, 0.18);
@@ -175,13 +176,13 @@
   transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
 
   &:hover {
-    border-color: rgba(20, 18, 16, 0.5);
-    color: rgba(20, 18, 16, 0.9);
+    border-color: rgba(20, 18, 16, 0.35);
+    color: rgba(20, 18, 16, 0.65);
   }
 
   &--active {
-    background: rgba(20, 18, 16, 0.88);
-    border-color: rgba(20, 18, 16, 0.88);
+    background: rgba(20, 18, 16, 0.65);
+    border-color: rgba(20, 18, 16, 0.65);
     color: #fff;
   }
 }
@@ -195,7 +196,7 @@
   gap: rem-calc(10);
   padding: rem-calc(16) rem-calc(28);
   border-radius: 999px;
-  background: rgba(20, 18, 16, 0.88);
+  background: rgba(20, 18, 16, 0.65);
   color: #fff;
   font-family: var(--font-mono);
   font-size: rem-calc(11);
@@ -224,7 +225,7 @@
   font-family: var(--font-mono);
   font-size: rem-calc(8.5);
   letter-spacing: 0.1em;
-  color: rgba(20, 18, 16, 0.28);
+  color: rgba(20, 18, 16, 0.18);
   margin: 0;
   line-height: 1.6;
 }
@@ -243,14 +244,14 @@
 
 .success__icon {
   font-size: rem-calc(28);
-  color: rgba(20, 18, 16, 0.5);
+  color: rgba(20, 18, 16, 0.35);
 }
 
 .success__title {
   font-family: var(--font-serif);
   font-size: rem-calc(32);
   font-weight: 300;
-  color: rgba(20, 18, 16, 0.88);
+  color: rgba(20, 18, 16, 0.65);
   margin: 0;
 }
 
@@ -259,7 +260,7 @@
   font-size: rem-calc(10);
   line-height: 1.6;
   letter-spacing: 0.04em;
-  color: rgba(20, 18, 16, 0.45);
+  color: rgba(20, 18, 16, 0.22);
   margin: 0;
 }
 
@@ -275,6 +276,6 @@
   font-family: var(--font-mono);
   font-size: rem-calc(8.5);
   letter-spacing: 0.18em;
-  color: rgba(20, 18, 16, 0.28);
+  color: rgba(20, 18, 16, 0.18);
   text-transform: uppercase;
 }

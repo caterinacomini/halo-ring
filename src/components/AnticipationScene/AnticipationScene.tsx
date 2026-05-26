@@ -83,11 +83,6 @@ export default function AnticipationScene() {
   return (
     <section ref={sectionRef} className={styles.section} aria-label="The Anticipation">
       <div className={styles.panel}>
-        <div className={styles.eyebrow}>
-          <span className={styles.eyebrow__tag}>03</span>
-          <span className={styles.eyebrow__text}>L&apos;anticipazione</span>
-        </div>
-
         <svg
           className={styles.svg}
           viewBox={`0 0 ${W} ${H}`}
@@ -106,7 +101,7 @@ export default function AnticipationScene() {
           <path
             ref={morphPathRef}
             fill="none"
-            stroke="rgba(20,18,16,0.82)"
+            stroke="rgba(20,18,16,0.5)"
             strokeWidth="1.5"
             strokeLinecap="round"
             filter="url(#healGlow)"

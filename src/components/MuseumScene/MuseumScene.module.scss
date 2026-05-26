@@ -4,13 +4,15 @@
   position: relative;
   height: 280vh;
   background: #fdf8f0;
+  z-index: 7;
 }
 
 .panel {
   position: sticky;
   top: 0;
   height: 100vh;
-  overflow: hidden;
+  background: #0e0d0c;
+  z-index: 16;
 }
 
 // Ring canvas fills the panel
@@ -74,12 +76,12 @@
   font-weight: 300;
   line-height: 1.05;
   letter-spacing: -0.02em;
-  color: rgba(20, 18, 16, 0.9);
+  color: rgba(20, 18, 16, 0.65);
   margin: 0;
 
   em {
     font-style: italic;
-    color: rgba(20, 18, 16, 0.38);
+    color: rgba(20, 18, 16, 0.26);
   }
 }
 

@@ -1,13 +1,12 @@
 @use '@/styles/abstracts' as *;
 
-// Scroll container — sets the scroll distance
 .section {
   position: relative;
-  height: 300vh;
+  height: 400vh; // one long scroll = both "acts" in a single section
   background: #fdf8f0;
+  z-index: 9;
 }
 
-// Sticky panel — the visible viewport-sized layer
 .panel {
   position: sticky;
   top: 0;
@@ -16,31 +15,19 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-}
+  background: #fdf8f0;
+  z-index: 20;
 
-.eyebrow {
-  position: absolute;
-  top: rem-calc(48);
-  left: rem-calc(48);
-  display: flex;
-  align-items: center;
-  gap: rem-calc(16);
-}
-
-.eyebrow__tag {
-  font-family: var(--font-mono);
-  font-size: rem-calc(9);
-  letter-spacing: 0.3em;
-  color: rgba(0, 0, 0, 0.25);
-}
-
-.eyebrow__text {
-  font-family: var(--font-mono);
-  font-size: rem-calc(9);
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: rgba(0, 0, 0, 0.4);
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -100vh;
+    left: 0;
+    right: 0;
+    height: 100vh;
+    background: #fdf8f0;
+    pointer-events: none;
+  }
 }
 
 .svg {
@@ -50,10 +37,11 @@
   flex-shrink: 0;
 }
 
+// Cortisol reading — fades in/out via JS opacity
 .cortisol {
   position: absolute;
   top: 50%;
-  right: rem-calc(80);
+  right: rem-calc(72);
   transform: translateY(-50%);
   display: flex;
   flex-direction: column;
@@ -64,10 +52,10 @@
 
 .cortisol__value {
   font-family: var(--font-serif);
-  font-size: rem-calc(56);
+  font-size: rem-calc(52);
   font-weight: 300;
   line-height: 1;
-  color: rgba(160, 60, 30, 0.82);
+  color: rgba(152, 58, 30, 0.72);
   letter-spacing: -0.02em;
 }
 
@@ -76,18 +64,36 @@
   font-size: rem-calc(9);
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: rgba(160, 60, 30, 0.5);
+  color: rgba(152, 58, 30, 0.42);
 }
 
-.descriptor {
+// Captions — both positioned at the same spot, crossfade via JS
+.caption {
   position: absolute;
-  bottom: rem-calc(52);
+  bottom: 20%;
   left: 50%;
   transform: translateX(-50%);
   font-family: var(--font-serif);
-  font-size: rem-calc(22);
+  font-size: clamp(rem-calc(28), 3.2vw, rem-calc(52));
   font-weight: 300;
-  font-style: italic;
-  color: rgba(0, 0, 0, 0.28);
+  line-height: 1.15;
+  color: rgba(20, 18, 16, 0.58);
   white-space: nowrap;
+  text-align: center;
+  pointer-events: none;
+  will-change: opacity, transform;
+
+  em {
+    font-style: italic;
+    color: rgba(20, 18, 16, 0.35);
+  }
+
+  // Heal version: slightly lighter italic-first
+  &--heal {
+    color: rgba(20, 18, 16, 0.52);
+
+    em {
+      color: rgba(20, 18, 16, 0.28);
+    }
+  }
 }

@@ -4,13 +4,15 @@
   position: relative;
   height: 320vh;
   background: #fdf8f0;
+  z-index: 6;
 }
 
 .panel {
   position: sticky;
   top: 0;
   height: 100vh;
-  overflow: hidden;
+  background: #fdf8f0;
+  z-index: 14;
 }
 
 .eyebrow {
@@ -57,12 +59,12 @@
   font-weight: 300;
   line-height: 1.0;
   letter-spacing: -0.02em;
-  color: rgba(20, 18, 16, 0.88);
+  color: rgba(20, 18, 16, 0.65);
   margin: 0 0 rem-calc(40);
 
   em {
     font-style: italic;
-    color: rgba(20, 18, 16, 0.32);
+    color: rgba(20, 18, 16, 0.22);
   }
 }
 
@@ -125,7 +127,7 @@
   font-family: var(--font-serif);
   font-size: rem-calc(20);
   font-weight: 300;
-  color: rgba(20, 18, 16, 0.88);
+  color: rgba(20, 18, 16, 0.65);
   margin: 0;
   flex-shrink: 0;
   min-width: rem-calc(220);
@@ -136,7 +138,7 @@
   font-size: rem-calc(10);
   line-height: 1.55;
   letter-spacing: 0.04em;
-  color: rgba(20, 18, 16, 0.42);
+  color: rgba(20, 18, 16, 0.20);
   margin: 0;
   max-width: rem-calc(320);
 }
