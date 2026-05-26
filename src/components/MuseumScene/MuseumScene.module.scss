@@ -1,0 +1,95 @@
+@use '@/styles/abstracts' as *;
+
+.section {
+  position: relative;
+  height: 280vh;
+  background: #fdf8f0;
+  z-index: 7;
+}
+
+.panel {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  background: #0e0d0c;
+  z-index: 16;
+}
+
+// Ring canvas fills the panel
+.ringWrap {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+// Dark curtain — starts covering everything, lifted via GSAP
+.curtain {
+  position: absolute;
+  inset: 0;
+  background: #0e0d0c;
+  z-index: 2;
+  transform-origin: top center;
+}
+
+// Copy — bottom-left, above curtain
+.copy {
+  position: absolute;
+  bottom: rem-calc(72);
+  left: rem-calc(48);
+  z-index: 3;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  gap: rem-calc(14);
+
+  @include breakpoint-sm {
+    left: 8vw;
+    bottom: rem-calc(88);
+  }
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: rem-calc(16);
+  margin: 0;
+}
+
+.eyebrow__tag {
+  font-family: var(--font-mono);
+  font-size: rem-calc(9);
+  letter-spacing: 0.3em;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.eyebrow__text {
+  font-family: var(--font-mono);
+  font-size: rem-calc(9);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.headline {
+  font-family: var(--font-serif);
+  font-size: clamp(rem-calc(36), 5.5vw, rem-calc(80));
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: rgba(20, 18, 16, 0.65);
+  margin: 0;
+
+  em {
+    font-style: italic;
+    color: rgba(20, 18, 16, 0.26);
+  }
+}
+
+.sub {
+  font-family: var(--font-mono);
+  font-size: rem-calc(9);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(20, 18, 16, 0.3);
+  margin: 0;
+}
