@@ -13,32 +13,53 @@ const H = 300;
 const CY = H / 2;
 
 /**
+ * Layered octave noise — organic, never repeating, like a biosignal.
+ * Uses irrational-ratio harmonics to avoid visible periodicity.
+ */
+function bioNoise(x: number): number {
+  // 6 octaves at golden-ratio-spaced frequencies, alternating phase
+  const layers = [
+    [1.000, 17.3,  0.00],
+    [0.500, 29.7,  1.57],
+    [0.250, 47.1, -0.93],
+    [0.125, 78.4,  2.41],
+    [0.062, 131.2, -1.76],
+    [0.031, 211.6,  0.88],
+  ] as const;
+  let v = 0, norm = 0;
+  for (const [amp, freq, phase] of layers) {
+    v    += Math.sin(x * freq + phase) * amp;
+    norm += amp;
+  }
+  return v / norm; // roughly [-1, 1]
+}
+
+/**
  * Builds polyline points. progress [0,1]:
  *   0   → flat
- *   0.5 → peak disturbance (knot near center)
- *   1   → back to flat (healed)
- *
- * Amplitude follows sin(π·p) so it rises and falls symmetrically.
+ *   0.5 → peak disturbance
+ *   1   → healed
  */
 function buildPoints(progress: number): string {
-  // knotCenter drifts left as scroll advances (wave "passing through")
   const knotCenter = 0.65 - progress * 0.35;
-  // amplitude: 0 → peak → 0
-  const amplitude = 72 * Math.sin(Math.PI * progress);
-  const width = 0.09;
+  // Main amplitude envelope: 0 → peak → 0
+  const amplitude = 80 * Math.sin(Math.PI * progress);
+  // Disturbance zone widens slightly as stress builds
+  const zoneWidth = 0.18 + progress * 0.14;
 
   const pts: string[] = [];
   for (let i = 0; i <= POINTS; i++) {
     const t = i / POINTS;
     const x = t * W;
     const dist = t - knotCenter;
-    const wave = amplitude * Math.exp(-(dist * dist) / (2 * width * width));
-    // secondary ripple trailing behind the knot
-    const ripple =
-      amplitude * 0.28 *
-      Math.sin((t - knotCenter) * 70) *
-      Math.exp(-(dist * dist) / (0.9 * width * width));
-    pts.push(`${x},${CY - wave - ripple}`);
+
+    // Envelope: gaussian window around the knot
+    const envelope = Math.exp(-(dist * dist) / (2 * zoneWidth * zoneWidth));
+
+    // Bio-noise displacement — completely organic shape
+    const displacement = bioNoise(t * 3.7 + progress * 1.2) * amplitude * envelope;
+
+    pts.push(`${x},${CY - displacement}`);
   }
   return pts.join(' ');
 }
@@ -47,6 +68,7 @@ export default function ThreatScene() {
   const sectionRef = useRef<HTMLElement>(null);
   const polyRef = useRef<SVGPolylineElement>(null);
   const cortisolRef = useRef<HTMLDivElement>(null);
+  const cortisolNumRef = useRef<HTMLSpanElement>(null);
   const text1Ref = useRef<HTMLDivElement>(null);
   const text2Ref = useRef<HTMLDivElement>(null);
 
@@ -73,11 +95,23 @@ export default function ThreatScene() {
         // Line — disturb and heal
         poly.setAttribute('points', buildPoints(p));
 
-        // Cortisol: in 20–40%, out 60–80%
+        // Cortisol counter: in 18–36%, out 60–78%
         const corIn  = gsap.utils.clamp(0, 1, (p - 0.18) / 0.18);
         const corOut = gsap.utils.clamp(0, 1, (p - 0.60) / 0.18);
+        const corVis = corIn * (1 - corOut);
         if (cortisolRef.current) {
-          cortisolRef.current.style.opacity = String(corIn * (1 - corOut));
+          // opacity
+          cortisolRef.current.style.opacity = String(corVis);
+          // scale: from 0.4 → 1 as corIn goes 0→1
+          const scale = 0.4 + corIn * 0.6;
+          cortisolRef.current.style.transform = `translateX(-50%) translateY(-50%) scale(${scale})`;
+          // color: light gray → near black
+          const lightness = Math.round(72 - corIn * 60); // 72% → 12%
+          cortisolRef.current.style.color = `hsl(25, 8%, ${lightness}%)`;
+        }
+        // count the number
+        if (cortisolNumRef.current) {
+          cortisolNumRef.current.textContent = `+${Math.round(corIn * 142)}%`;
         }
 
         // Text 1 "Il tuo corpo sapeva. Tu no." — in 15–30%, out 55–70%
@@ -130,9 +164,9 @@ export default function ThreatScene() {
           />
         </svg>
 
-        {/* Cortisol reading */}
+        {/* Cortisol counter */}
         <div ref={cortisolRef} className={styles.cortisol}>
-          <span className={styles.cortisol__value}>+142%</span>
+          <span ref={cortisolNumRef} className={styles.cortisol__value}>+0%</span>
           <span className={styles.cortisol__label}>cortisolo rilevato</span>
         </div>
 

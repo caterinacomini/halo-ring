@@ -1,0 +1,184 @@
+@use '@/styles/abstracts' as *;
+
+.section {
+  position: relative;
+  height: 400vh;
+  background: #fdf8f0;
+  z-index: 10;
+}
+
+.panel {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: #fdf8f0;
+}
+
+// ── Canvas ────────────────────────────────────────────────────────
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+// ── Fog overlay ───────────────────────────────────────────────────
+
+.fog {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 60% 50% at 50% 48%,
+    rgba(253, 248, 240, 0.0) 0%,
+    rgba(253, 248, 240, 0.6) 35%,
+    rgba(253, 248, 240, 0.92) 60%,
+    #fdf8f0 85%
+  );
+  pointer-events: none;
+  will-change: opacity;
+}
+
+// ── Title block ───────────────────────────────────────────────────
+
+.titleBlock {
+  position: absolute;
+  top: rem-calc(64);
+  left: rem-calc(56);
+  display: flex;
+  flex-direction: column;
+  gap: rem-calc(6);
+
+  @include breakpoint-sm {
+    left: 8vw;
+  }
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: clamp(rem-calc(40), 5.5vw, rem-calc(76));
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: rgba(20, 18, 16, 0.72);
+  margin: 0;
+
+  em {
+    font-style: italic;
+    color: rgba(20, 18, 16, 0.32);
+  }
+}
+
+.subtitle {
+  font-family: var(--font-sans);
+  font-size: rem-calc(13);
+  color: rgba(20, 18, 16, 0.32);
+  margin: 0;
+}
+
+// ── Feature list ──────────────────────────────────────────────────
+
+.features {
+  position: absolute;
+  bottom: rem-calc(72);
+  left: rem-calc(56);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: rem-calc(320);
+
+  @include breakpoint-sm {
+    left: 8vw;
+  }
+}
+
+.feature {
+  padding: rem-calc(18) 0;
+  border-top: 1px solid rgba(20, 18, 16, 0.1);
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+  will-change: opacity, transform;
+
+  &:last-child {
+    border-bottom: 1px solid rgba(20, 18, 16, 0.1);
+  }
+
+  &--active {
+    border-top-color: rgba(20, 18, 16, 0.35);
+
+    .feature__title {
+      color: rgba(20, 18, 16, 0.82);
+    }
+  }
+}
+
+.feature__header {
+  display: flex;
+  align-items: baseline;
+  gap: rem-calc(16);
+}
+
+.feature__num {
+  font-family: var(--font-sans);
+  font-size: rem-calc(10);
+  color: rgba(20, 18, 16, 0.22);
+  letter-spacing: 0.08em;
+  flex-shrink: 0;
+}
+
+.feature__title {
+  font-family: var(--font-serif);
+  font-size: rem-calc(20);
+  font-weight: 300;
+  color: rgba(20, 18, 16, 0.58);
+  margin: 0;
+  transition: color 0.2s ease;
+}
+
+.feature__body {
+  font-family: var(--font-sans);
+  font-size: rem-calc(12);
+  line-height: 1.65;
+  color: rgba(20, 18, 16, 0.38);
+  margin: rem-calc(10) 0 0 rem-calc(26);
+}
+
+// ── Hotspots ──────────────────────────────────────────────────────
+
+.hotspot {
+  position: absolute;
+  width: rem-calc(14);
+  height: rem-calc(14);
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.18);
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+  backdrop-filter: blur(2px);
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+
+  &--active {
+    background: rgba(255, 255, 255, 0.65);
+    border-color: #fff;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50%       { opacity: 0; transform: scale(1.8); }
+}

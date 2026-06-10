@@ -63,7 +63,6 @@ export default function HeroOverlay() {
 
       {/* Bottom-left: title */}
       <div className={styles.bottom}>
-        <p className={styles.eyebrow} data-hero-anim>Il primo anello che prevede lo stress</p>
         <h1 className={styles.title} data-hero-anim>
           Halo<br /><em>Ring</em>
         </h1>

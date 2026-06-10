@@ -64,7 +64,7 @@
   font-size: rem-calc(9);
   letter-spacing: 0.35em;
   color: rgba(0, 0, 0, 0.4);
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   margin-bottom: rem-calc(12);
   text-transform: uppercase;
 }
@@ -83,7 +83,7 @@
   font-size: rem-calc(10);
   letter-spacing: 0.18em;
   color: rgba(0, 0, 0, 0.4);
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   margin-top: rem-calc(8);
 }
 
@@ -107,7 +107,7 @@
   font-size: rem-calc(10);
   letter-spacing: 0.08em;
   color: rgba(0, 0, 0, 0.55);
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   white-space: nowrap;
   opacity: 0;
   transform: translateX(24px);
@@ -130,7 +130,7 @@
   font-size: rem-calc(9);
   letter-spacing: 0.25em;
   color: rgba(0, 0, 0, 0.4);
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   margin-top: rem-calc(6);
   text-align: center;
   text-transform: uppercase;

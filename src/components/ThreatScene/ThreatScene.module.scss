@@ -31,40 +31,47 @@
 }
 
 .svg {
-  width: 100%;
-  height: rem-calc(300);
-  display: block;
-  flex-shrink: 0;
-}
-
-// Cortisol reading — fades in/out via JS opacity
-.cortisol {
   position: absolute;
   top: 50%;
-  right: rem-calc(72);
+  left: 0;
   transform: translateY(-50%);
+  width: 100%;
+  height: rem-calc(200);
+  display: block;
+  pointer-events: none;
+}
+
+// Cortisol counter — position/color/scale driven by JS
+.cortisol {
+  position: absolute;
+  top: 28%;
+  left: 50%;
+  transform: translateX(-50%) scale(0.4);
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  gap: rem-calc(4);
+  align-items: center;
+  gap: rem-calc(12);
   pointer-events: none;
+  color: hsl(25, 8%, 72%);
+  will-change: transform, opacity, color;
 }
 
 .cortisol__value {
   font-family: var(--font-serif);
-  font-size: rem-calc(52);
+  font-size: clamp(rem-calc(80), 14vw, rem-calc(200));
   font-weight: 300;
   line-height: 1;
-  color: rgba(152, 58, 30, 0.72);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.04em;
+  color: inherit;
 }
 
 .cortisol__label {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: rem-calc(9);
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: rgba(152, 58, 30, 0.42);
+  color: inherit;
+  opacity: 0.5;
 }
 
 // Captions — both positioned at the same spot, crossfade via JS

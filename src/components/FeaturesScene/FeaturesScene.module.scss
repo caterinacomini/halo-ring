@@ -26,14 +26,14 @@
 }
 
 .eyebrow__tag {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: rem-calc(9);
   letter-spacing: 0.3em;
   color: rgba(0, 0, 0, 0.25);
 }
 
 .eyebrow__text {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: rem-calc(9);
   letter-spacing: 0.28em;
   text-transform: uppercase;
@@ -96,7 +96,7 @@
 }
 
 .item__num {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: rem-calc(9);
   letter-spacing: 0.3em;
   color: rgba(0, 0, 0, 0.22);
@@ -134,7 +134,7 @@
 }
 
 .item__body {
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   font-size: rem-calc(10);
   line-height: 1.55;
   letter-spacing: 0.04em;

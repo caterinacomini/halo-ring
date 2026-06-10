@@ -43,7 +43,7 @@
 .navbar__wordmark {
   font-size: rem-calc(11);
   letter-spacing: 0.3em;
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   text-transform: uppercase;
   color: inherit;
 }
@@ -56,11 +56,12 @@
   border-radius: 999px;
   background: rgba(0, 0, 0, 0.55);
   color: rgba(255, 255, 255, 0.88);
-  font-family: var(--font-mono);
-  font-size: rem-calc(11);
-  letter-spacing: 0.18em;
+  font-family: var(--font-sans);
+  font-size: rem-calc(13);
+  font-weight: 400;
+  letter-spacing: 0.01em;
   text-decoration: none;
-  text-transform: uppercase;
+  text-transform: none;
   transition: background 0.25s ease, transform 0.15s ease;
 
   &:hover {
@@ -88,11 +89,11 @@
 }
 
 .eyebrow {
-  font-size: rem-calc(10);
-  letter-spacing: 0.22em;
-  color: rgba(0, 0, 0, 0.25);
-  font-family: var(--font-mono);
-  text-transform: uppercase;
+  font-size: rem-calc(13);
+  letter-spacing: 0.01em;
+  color: rgba(0, 0, 0, 0.38);
+  font-family: var(--font-sans);
+  font-weight: 400;
 }
 
 .title {
@@ -110,10 +111,11 @@
 }
 
 .sub {
-  font-size: rem-calc(10);
-  letter-spacing: 0.18em;
-  color: rgba(0, 0, 0, 0.22);
-  font-family: var(--font-mono);
+  font-size: rem-calc(12);
+  letter-spacing: 0.01em;
+  color: rgba(0, 0, 0, 0.28);
+  font-family: var(--font-sans);
+  font-weight: 300;
 }
 
 // ── Scroll hint ──────────────────────────────────────────────────
@@ -131,7 +133,7 @@
   font-size: rem-calc(9);
   letter-spacing: 0.3em;
   color: rgba(0, 0, 0, 0.18);
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   writing-mode: vertical-rl;
 }
 
