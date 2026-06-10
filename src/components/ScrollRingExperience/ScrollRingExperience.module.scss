@@ -1,0 +1,88 @@
+@use '@/styles/abstracts' as *;
+
+.section {
+  position: relative;
+  height: 500vh; // hero + 2 chapters + exit, all scrubbed
+  background: #fdf8f0;
+  z-index: 5;
+}
+
+.panel {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: #fdf8f0;
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+// ── Hero overlay wrapper (fades out on scroll) ────────────────────
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  will-change: opacity;
+}
+
+// ── Scroll chapters ───────────────────────────────────────────────
+
+.chapter {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  max-width: rem-calc(420);
+  display: flex;
+  flex-direction: column;
+  gap: rem-calc(16);
+  pointer-events: none;
+  will-change: opacity, transform;
+
+  &--left {
+    left: rem-calc(56);
+
+    @include breakpoint-sm {
+      left: 8vw;
+    }
+  }
+
+  &--right {
+    right: rem-calc(56);
+    text-align: right;
+    align-items: flex-end;
+
+    @include breakpoint-sm {
+      right: 8vw;
+    }
+  }
+}
+
+.chapter__title {
+  font-family: var(--font-serif);
+  font-size: clamp(rem-calc(40), 4.6vw, rem-calc(64));
+  font-weight: 300;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: rgba(20, 18, 16, 0.68);
+  margin: 0;
+
+  em {
+    font-style: italic;
+    color: rgba(20, 18, 16, 0.30);
+  }
+}
+
+.chapter__body {
+  font-family: var(--font-sans);
+  font-size: rem-calc(13);
+  font-weight: 300;
+  line-height: 1.7;
+  color: rgba(20, 18, 16, 0.38);
+  max-width: rem-calc(320);
+  margin: 0;
+}
