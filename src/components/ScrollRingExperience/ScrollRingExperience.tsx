@@ -249,7 +249,20 @@ export default function ScrollRingExperience() {
       },
     });
 
-    return () => { st.kill(); };
+    // Local fonts (Reckless Neue) load async with display:swap. When they
+    // swap in, layout shifts — recompute ScrollTrigger start/end so chapter
+    // and ring keyframes stay locked to the right scroll positions.
+    // Without this, the first network load on Vercel scrubs at stale offsets.
+    const refresh = () => ScrollTrigger.refresh();
+    if (document.fonts?.ready) {
+      document.fonts.ready.then(refresh);
+    }
+    window.addEventListener('load', refresh);
+
+    return () => {
+      st.kill();
+      window.removeEventListener('load', refresh);
+    };
   }, []);
 
   return (
