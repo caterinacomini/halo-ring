@@ -86,11 +86,11 @@ export function createHaloRing(envMap: THREE.Texture): THREE.Group {
   const linerGeo = new THREE.LatheGeometry(linerPts, 256);
   linerGeo.computeVertexNormals();
   const linerMat = new THREE.MeshStandardMaterial({
-    color: 0x84888f,
-    roughness: 0.12,
+    color: 0x4a4d53,
+    roughness: 0.26,
     metalness: 1.0,
     envMap,
-    envMapIntensity: 0.65,
+    envMapIntensity: 0.45,
     side: THREE.DoubleSide,
   });
   const liner = new THREE.Mesh(linerGeo, linerMat);
