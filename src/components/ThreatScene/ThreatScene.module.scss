@@ -41,6 +41,28 @@
   pointer-events: none;
 }
 
+// Red glow behind the ECG — pulses with the heartbeat (driven via JS)
+.glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: rem-calc(820);
+  height: rem-calc(520);
+  max-width: 90vw;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(206, 44, 30, 0.55) 0%,
+    rgba(206, 44, 30, 0.24) 38%,
+    rgba(206, 44, 30, 0) 70%
+  );
+  mix-blend-mode: multiply;
+  opacity: 0;
+  pointer-events: none;
+  will-change: opacity, transform;
+}
+
 // Glowing dot that rides the ECG trace (positioned via JS each frame)
 .dot {
   position: absolute;

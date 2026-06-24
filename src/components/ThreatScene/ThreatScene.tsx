@@ -71,6 +71,7 @@ export default function ThreatScene() {
   const sectionRef = useRef<HTMLElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const polyRef = useRef<SVGPolylineElement>(null);
+  const glowRef = useRef<HTMLDivElement>(null);
   const dotRef = useRef<HTMLDivElement>(null);
   const cortisolRef = useRef<HTMLDivElement>(null);
   const cortisolNumRef = useRef<HTMLSpanElement>(null);
@@ -126,6 +127,20 @@ export default function ThreatScene() {
         dot.style.opacity = String(0.4 + flare * 0.4);
         dot.style.boxShadow =
           `0 0 ${6 + flare * 20}px ${2 + flare * 5}px rgba(214, 196, 158, ${0.2 + flare * 0.4})`;
+
+        // Red glow: intensity scales with cortisol level, flares on each beat
+        const glow = glowRef.current;
+        if (glow) {
+          glow.style.opacity = String(level * (0.18 + flare * 0.82));
+          glow.style.transform = `translate(-50%, -50%) scale(${1 + flare * 0.14})`;
+        }
+
+        // Line shifts dark → alarm-red as stress rises
+        const r = Math.round(20 + level * 195);
+        const g = Math.round(18 + level * 22);
+        const b = Math.round(16 + level * 10);
+        poly.setAttribute('stroke', `rgba(${r},${g},${b},${0.48 + level * 0.42})`);
+        poly.setAttribute('stroke-width', String(1.4 + level * 1.1));
       }
 
       raf = requestAnimationFrame(draw);
@@ -183,6 +198,9 @@ export default function ThreatScene() {
   return (
     <section ref={sectionRef} className={styles.section} aria-label="Signal">
       <div className={styles.panel}>
+
+        {/* Pulsing red glow behind the trace — flares on each beat */}
+        <div ref={glowRef} className={styles.glow} aria-hidden="true" />
 
         {/* SVG signal line */}
         <svg
