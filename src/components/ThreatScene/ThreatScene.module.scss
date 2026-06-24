@@ -41,6 +41,19 @@
   pointer-events: none;
 }
 
+// Glowing dot that rides the ECG trace (positioned via JS each frame)
+.dot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: rem-calc(9);
+  height: rem-calc(9);
+  border-radius: 50%;
+  background: rgb(214, 78, 48);
+  pointer-events: none;
+  will-change: transform, opacity, box-shadow;
+}
+
 // Cortisol counter — position/color/scale driven by JS
 .cortisol {
   position: absolute;

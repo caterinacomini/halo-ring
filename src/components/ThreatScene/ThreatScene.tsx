@@ -58,7 +58,9 @@ function buildPoints(progress: number, offset: number): string {
 
 export default function ThreatScene() {
   const sectionRef = useRef<HTMLElement>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
   const polyRef = useRef<SVGPolylineElement>(null);
+  const dotRef = useRef<HTMLDivElement>(null);
   const cortisolRef = useRef<HTMLDivElement>(null);
   const cortisolNumRef = useRef<HTMLSpanElement>(null);
   const text1Ref = useRef<HTMLDivElement>(null);
@@ -78,6 +80,9 @@ export default function ThreatScene() {
     gsap.set(text2Ref.current,   { opacity: 0, y: 12 });
 
     // ── ECG draw loop — trace scrolls left over time like a monitor ──
+    // A glowing dot rides the trace at a fixed x; beats scroll under it,
+    // so it bobs up and flares on every R-peak — the live "heart rate".
+    const DOT_X = 0.78; // fractional x where the dot sits
     let raf = 0;
     let offset = 0;
     let last = performance.now();
@@ -87,8 +92,31 @@ export default function ThreatScene() {
       const p = progressRef.current;
       // beats per second: calm ~1 Hz (60 bpm) → stressed ~2.4 Hz (~145 bpm)
       const stress = Math.sin(Math.PI * Math.max(0, Math.min(1, p)));
+      const beatsAcross = 4 + stress * 4.5;
+      const amplitude = 24 + stress * 74;
       offset += dt * (0.95 + stress * 1.5);
       poly.setAttribute('points', buildPoints(p, offset));
+
+      // Position the glowing dot on the trace at DOT_X
+      const svg = svgRef.current;
+      const dot = dotRef.current;
+      const panel = svg?.parentElement;
+      if (svg && dot && panel) {
+        const beatVal = ecgBeat(DOT_X * beatsAcross + offset); // 0..1, R≈1
+        const yv = CY - beatVal * amplitude;                   // viewBox y
+        // getBoundingClientRect includes the svg's translateY transform
+        const s = svg.getBoundingClientRect();
+        const pr = panel.getBoundingClientRect();
+        const left = (s.left - pr.left) + DOT_X * s.width;
+        const top = (s.top - pr.top) + (yv / H) * s.height;
+        const flare = Math.max(0, beatVal);                    // glow on spikes
+        dot.style.transform =
+          `translate(${left}px, ${top}px) translate(-50%, -50%) scale(${1 + flare * 1.7})`;
+        dot.style.opacity = String(0.55 + flare * 0.45);
+        dot.style.boxShadow =
+          `0 0 ${6 + flare * 22}px ${2 + flare * 6}px rgba(190, 64, 38, ${0.25 + flare * 0.5})`;
+      }
+
       raf = requestAnimationFrame(draw);
     };
     raf = requestAnimationFrame(draw);
@@ -147,6 +175,7 @@ export default function ThreatScene() {
 
         {/* SVG signal line */}
         <svg
+          ref={svgRef}
           className={styles.svg}
           viewBox={`0 0 ${W} ${H}`}
           preserveAspectRatio="none"
@@ -170,6 +199,9 @@ export default function ThreatScene() {
             filter="url(#sigGlow)"
           />
         </svg>
+
+        {/* Glowing dot riding the trace — live heart rate */}
+        <div ref={dotRef} className={styles.dot} aria-hidden="true" />
 
         {/* Cortisol counter */}
         <div ref={cortisolRef} className={styles.cortisol}>
