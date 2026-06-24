@@ -37,13 +37,24 @@ function ecgBeat(phase: number): number {
 }
 
 /**
- * Builds the ECG polyline. `progress` (scroll) raises stress → faster,
- * taller beats; `offset` (time) scrolls the trace left like a monitor.
+ * Cortisol level 0→1, the single driver shared by the percentage counter
+ * and the heartbeat. Rises as the number counts up, holds while +142% is
+ * shown, falls as it heals — so heart rate moves in step with the %.
  */
-function buildPoints(progress: number, offset: number): string {
-  const stress = Math.sin(Math.PI * Math.max(0, Math.min(1, progress)));
-  const beatsAcross = 4 + stress * 4.5; // 4 → ~8.5 beats visible
-  const amplitude = 24 + stress * 74;   // calm → spiking
+function stressLevel(progress: number): number {
+  const clamp = (v: number) => Math.max(0, Math.min(1, v));
+  const rise = clamp((progress - 0.18) / 0.18); // 0.18 → 0.36
+  const fall = clamp((progress - 0.60) / 0.18); // 0.60 → 0.78
+  return rise * (1 - fall);
+}
+
+/**
+ * Builds the ECG polyline. `level` (cortisol 0→1) raises rate + amplitude;
+ * `offset` (time) scrolls the trace left like a monitor.
+ */
+function buildPoints(level: number, offset: number): string {
+  const beatsAcross = 4 + level * 5; // ~4 (60 bpm) → ~9 beats visible
+  const amplitude = 24 + level * 78; // calm → spiking
 
   const pts: string[] = [];
   for (let i = 0; i <= POINTS; i++) {
@@ -80,9 +91,9 @@ export default function ThreatScene() {
     gsap.set(text2Ref.current,   { opacity: 0, y: 12 });
 
     // ── ECG draw loop — trace scrolls left over time like a monitor ──
-    // A glowing dot rides the trace at a fixed x; beats scroll under it,
-    // so it bobs up and flares on every R-peak — the live "heart rate".
-    const DOT_X = 0.78; // fractional x where the dot sits
+    // A soft dot rides the trace at center; beats scroll under it, so it
+    // bobs up and flares on every R-peak — the live "heart rate".
+    const DOT_X = 0.5; // centered
     let raf = 0;
     let offset = 0;
     let last = performance.now();
@@ -90,14 +101,14 @@ export default function ThreatScene() {
       const dt = Math.min(0.05, (now - last) / 1000);
       last = now;
       const p = progressRef.current;
-      // beats per second: calm ~1 Hz (60 bpm) → stressed ~2.4 Hz (~145 bpm)
-      const stress = Math.sin(Math.PI * Math.max(0, Math.min(1, p)));
-      const beatsAcross = 4 + stress * 4.5;
-      const amplitude = 24 + stress * 74;
-      offset += dt * (0.95 + stress * 1.5);
-      poly.setAttribute('points', buildPoints(p, offset));
+      // cortisol level drives rate + amplitude: slow at rest → fast under stress
+      const level = stressLevel(p);
+      const beatsAcross = 4 + level * 5;
+      const amplitude = 24 + level * 78;
+      offset += dt * (0.85 + level * 1.7); // beats per second rises with %
+      poly.setAttribute('points', buildPoints(level, offset));
 
-      // Position the glowing dot on the trace at DOT_X
+      // Position the soft dot on the trace at DOT_X
       const svg = svgRef.current;
       const dot = dotRef.current;
       const panel = svg?.parentElement;
@@ -112,9 +123,9 @@ export default function ThreatScene() {
         const flare = Math.max(0, beatVal);                    // glow on spikes
         dot.style.transform =
           `translate(${left}px, ${top}px) translate(-50%, -50%) scale(${1 + flare * 1.7})`;
-        dot.style.opacity = String(0.55 + flare * 0.45);
+        dot.style.opacity = String(0.4 + flare * 0.4);
         dot.style.boxShadow =
-          `0 0 ${6 + flare * 22}px ${2 + flare * 6}px rgba(190, 64, 38, ${0.25 + flare * 0.5})`;
+          `0 0 ${6 + flare * 20}px ${2 + flare * 5}px rgba(214, 196, 158, ${0.2 + flare * 0.4})`;
       }
 
       raf = requestAnimationFrame(draw);
@@ -144,9 +155,9 @@ export default function ThreatScene() {
           const lightness = Math.round(72 - corIn * 60); // 72% → 12%
           cortisolRef.current.style.color = `hsl(25, 8%, ${lightness}%)`;
         }
-        // count the number
+        // count the number — same driver as the heartbeat, so they move in step
         if (cortisolNumRef.current) {
-          cortisolNumRef.current.textContent = `+${Math.round(corIn * 142)}%`;
+          cortisolNumRef.current.textContent = `+${Math.round(stressLevel(p) * 142)}%`;
         }
 
         // Text 1 "Il tuo corpo sapeva. Tu no." — in 15–30%, out 55–70%

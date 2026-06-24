@@ -46,10 +46,10 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: rem-calc(9);
-  height: rem-calc(9);
+  width: rem-calc(10);
+  height: rem-calc(10);
   border-radius: 50%;
-  background: rgb(214, 78, 48);
+  background: rgba(214, 196, 158, 0.6);
   pointer-events: none;
   will-change: transform, opacity, box-shadow;
 }
