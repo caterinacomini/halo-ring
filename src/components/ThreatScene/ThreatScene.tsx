@@ -7,59 +7,51 @@ import styles from './ThreatScene.module.scss';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const POINTS = 160;
+const POINTS = 900;
 const W = 1440;
 const H = 300;
 const CY = H / 2;
 
 /**
- * Layered octave noise — organic, never repeating, like a biosignal.
- * Uses irrational-ratio harmonics to avoid visible periodicity.
+ * One ECG heartbeat (PQRST complex), phase ∈ [0,1) within a beat.
+ * Returns vertical displacement, baseline 0, R-peak ≈ 1.
+ *   P  small bump · Q dip · R tall spike · S dip · T medium bump
  */
-function bioNoise(x: number): number {
-  // 6 octaves at golden-ratio-spaced frequencies, alternating phase
-  const layers = [
-    [1.000, 17.3,  0.00],
-    [0.500, 29.7,  1.57],
-    [0.250, 47.1, -0.93],
-    [0.125, 78.4,  2.41],
-    [0.062, 131.2, -1.76],
-    [0.031, 211.6,  0.88],
-  ] as const;
-  let v = 0, norm = 0;
-  for (const [amp, freq, phase] of layers) {
-    v    += Math.sin(x * freq + phase) * amp;
-    norm += amp;
-  }
-  return v / norm; // roughly [-1, 1]
+function ecgBeat(phase: number): number {
+  const p = phase - Math.floor(phase); // wrap to [0,1)
+  // smooth bump (gaussian) for P and T waves
+  const bump = (c: number, w: number, h: number) =>
+    h * Math.exp(-((p - c) * (p - c)) / (2 * w * w));
+  // sharp triangular spike for Q, R, S
+  const spike = (c: number, hw: number, h: number) => {
+    const d = Math.abs(p - c);
+    return d < hw ? h * (1 - d / hw) : 0;
+  };
+  return (
+    bump(0.18, 0.022, 0.14) +   // P wave
+    spike(0.262, 0.012, -0.11) + // Q
+    spike(0.288, 0.011, 1.0) +   // R (tall spike)
+    spike(0.312, 0.014, -0.32) + // S
+    bump(0.46, 0.032, 0.20)      // T wave
+  );
 }
 
 /**
- * Builds polyline points. progress [0,1]:
- *   0   → flat
- *   0.5 → peak disturbance
- *   1   → healed
+ * Builds the ECG polyline. `progress` (scroll) raises stress → faster,
+ * taller beats; `offset` (time) scrolls the trace left like a monitor.
  */
-function buildPoints(progress: number): string {
-  const knotCenter = 0.65 - progress * 0.35;
-  // Main amplitude envelope: 0 → peak → 0
-  const amplitude = 80 * Math.sin(Math.PI * progress);
-  // Disturbance zone widens slightly as stress builds
-  const zoneWidth = 0.18 + progress * 0.14;
+function buildPoints(progress: number, offset: number): string {
+  const stress = Math.sin(Math.PI * Math.max(0, Math.min(1, progress)));
+  const beatsAcross = 4 + stress * 4.5; // 4 → ~8.5 beats visible
+  const amplitude = 24 + stress * 74;   // calm → spiking
 
   const pts: string[] = [];
   for (let i = 0; i <= POINTS; i++) {
     const t = i / POINTS;
     const x = t * W;
-    const dist = t - knotCenter;
-
-    // Envelope: gaussian window around the knot
-    const envelope = Math.exp(-(dist * dist) / (2 * zoneWidth * zoneWidth));
-
-    // Bio-noise displacement — completely organic shape
-    const displacement = bioNoise(t * 3.7 + progress * 1.2) * amplitude * envelope;
-
-    pts.push(`${x},${CY - displacement}`);
+    const phase = t * beatsAcross + offset;
+    const y = CY - ecgBeat(phase) * amplitude;
+    pts.push(`${x},${y.toFixed(2)}`);
   }
   return pts.join(' ');
 }
@@ -71,18 +63,35 @@ export default function ThreatScene() {
   const cortisolNumRef = useRef<HTMLSpanElement>(null);
   const text1Ref = useRef<HTMLDivElement>(null);
   const text2Ref = useRef<HTMLDivElement>(null);
+  const progressRef = useRef(0);
 
   useEffect(() => {
     const section = sectionRef.current;
     const poly = polyRef.current;
     if (!section || !poly) return;
 
-    poly.setAttribute('points', buildPoints(0));
+    poly.setAttribute('points', buildPoints(0, 0));
 
     // Initial states
     gsap.set(cortisolRef.current, { opacity: 0 });
     gsap.set(text1Ref.current,   { opacity: 0, y: 12 });
     gsap.set(text2Ref.current,   { opacity: 0, y: 12 });
+
+    // ── ECG draw loop — trace scrolls left over time like a monitor ──
+    let raf = 0;
+    let offset = 0;
+    let last = performance.now();
+    const draw = (now: number) => {
+      const dt = Math.min(0.05, (now - last) / 1000);
+      last = now;
+      const p = progressRef.current;
+      // beats per second: calm ~1 Hz (60 bpm) → stressed ~2.4 Hz (~145 bpm)
+      const stress = Math.sin(Math.PI * Math.max(0, Math.min(1, p)));
+      offset += dt * (0.95 + stress * 1.5);
+      poly.setAttribute('points', buildPoints(p, offset));
+      raf = requestAnimationFrame(draw);
+    };
+    raf = requestAnimationFrame(draw);
 
     const st = ScrollTrigger.create({
       trigger: section,
@@ -91,9 +100,7 @@ export default function ThreatScene() {
       scrub: 1.4,
       onUpdate: (self) => {
         const p = self.progress;
-
-        // Line — disturb and heal
-        poly.setAttribute('points', buildPoints(p));
+        progressRef.current = p;
 
         // Cortisol counter: in 18–36%, out 60–78%
         const corIn  = gsap.utils.clamp(0, 1, (p - 0.18) / 0.18);
@@ -131,7 +138,7 @@ export default function ThreatScene() {
       },
     });
 
-    return () => { st.kill(); };
+    return () => { st.kill(); cancelAnimationFrame(raf); };
   }, []);
 
   return (
