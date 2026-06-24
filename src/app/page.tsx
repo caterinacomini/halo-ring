@@ -1,6 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import SiteNav from '@/components/SiteNav';
 import ThreatScene from '@/components/ThreatScene';
 import MuseumScene from '@/components/MuseumScene';
 import FeaturesScene from '@/components/FeaturesScene';
@@ -14,7 +15,10 @@ const ScrollRingExperience = dynamic(
 
 export default function Home() {
   return (
-    <main>
+    <main id="top">
+      {/* Persistent nav — CTA always visible */}
+      <SiteNav />
+
       {/* S1 — HERO + scroll-scrubbed ring chapters */}
       <ScrollRingExperience />
 
