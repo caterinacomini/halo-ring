@@ -1,160 +1,118 @@
 import * as THREE from 'three';
 
 /**
- * Halo Ring 3D model — built to match the product renders:
- *  - glossy black outer shell, slightly domed, crisp lip at the rims
- *  - mirror-chrome inner liner (epoxy over PCB look)
- *  - electronics under the liner: gold pads, dark ICs, red + green LEDs,
- *    one chrome charge button
+ * Halo Ring — Obsidian Edition. Ported from the reference HTML model:
+ *  - band with rounded rim edges (LatheGeometry), matte-black
+ *  - bore + inner chamfer
+ *  - 3 optical sensors (bezel + glass lens; center lens emissive)
+ *  - 2 gold charge contacts (disc + rim)
  *
- * Outer diameter ≈ 0.43 world units, band height ≈ 0.105.
+ * Built at reference scale (outer radius 1.0) then scaled down so the
+ * group drops into the existing pose system (outer radius ≈ 0.205).
  */
+const MODEL_SCALE = 0.205;
+
 export function createHaloRing(envMap: THREE.Texture): THREE.Group {
-  const group = new THREE.Group();
+  const outer = new THREE.Group();
+  const rg = new THREE.Group();
+  outer.add(rg);
 
-  const Rliner = 0.162;  // bore radius (chrome liner)
-  const Rout   = 0.205;  // nominal outer radius
-  const halfH  = 0.052;  // band half-height — wide band like the renders
-  const dome   = 0.009;  // outer wall convexity
-  const edge   = 0.006;  // rim edge rounding
-  const arcN   = 6;
+  const OR = 1.0, IR = 0.76, BH = 0.445, BV = 0.046, NL = 200;
 
-  // ── Outer shell profile ───────────────────────────────────────────
-  const shellIn = Rliner + 0.0015; // hidden just behind the liner
+  // ── Band profile (rounded outer rim top + bottom) ─────────────────
   const pts: THREE.Vector2[] = [];
-
-  // 1) top face: inner → outer
-  pts.push(new THREE.Vector2(shellIn, halfH));
-
-  // 2) top edge arc — center (Rout-edge, halfH-edge), 90° → 0°
-  for (let i = 0; i <= arcN; i++) {
-    const a = (i / arcN) * (Math.PI / 2);
-    pts.push(new THREE.Vector2(
-      Rout - edge + edge * Math.sin(a),
-      halfH - edge + edge * Math.cos(a)
-    ));
+  const NB = 16;
+  pts.push(new THREE.Vector2(IR, BH / 2));
+  pts.push(new THREE.Vector2(OR - BV, BH / 2));
+  for (let i = 1; i <= NB; i++) {
+    const a = (Math.PI / 2) * (1 - i / NB);
+    pts.push(new THREE.Vector2(OR - BV + BV * Math.cos(a), BH / 2 - BV + BV * Math.sin(a)));
+  }
+  pts.push(new THREE.Vector2(OR, -(BH / 2 - BV)));
+  for (let j = 1; j <= NB; j++) {
+    const b = -(Math.PI / 2) * (j / NB);
+    pts.push(new THREE.Vector2(OR - BV + BV * Math.cos(b), -(BH / 2 - BV) + BV * Math.sin(b)));
+  }
+  pts.push(new THREE.Vector2(IR, -BH / 2));
+  for (let k = 1; k <= 10; k++) {
+    pts.push(new THREE.Vector2(IR, -BH / 2 + (BH * k) / 10));
   }
 
-  // 3) domed outer wall: y from +(halfH-edge) to -(halfH-edge)
-  const yEdge = halfH - edge;
-  const bulgeAtEdge = dome * Math.cos((yEdge / halfH) * (Math.PI / 2));
-  const wallSegs = 28;
-  for (let i = 1; i < wallSegs; i++) {
-    const y = yEdge * (1 - 2 * (i / wallSegs));
-    const bulge = dome * Math.cos((y / halfH) * (Math.PI / 2));
-    pts.push(new THREE.Vector2(Rout + bulge - bulgeAtEdge, y));
-  }
-
-  // 4) bottom edge arc — center (Rout-edge, -(halfH-edge)), 0° → 90°
-  for (let i = 0; i <= arcN; i++) {
-    const a = (i / arcN) * (Math.PI / 2);
-    pts.push(new THREE.Vector2(
-      Rout - edge + edge * Math.cos(a),
-      -(halfH - edge) - edge * Math.sin(a)
-    ));
-  }
-
-  // 5) bottom face → inner wall back up
-  pts.push(new THREE.Vector2(shellIn, -halfH));
-  pts.push(new THREE.Vector2(shellIn, halfH));
-
-  const shellGeo = new THREE.LatheGeometry(pts, 256);
-  shellGeo.computeVertexNormals();
-  const shellMat = new THREE.MeshPhysicalMaterial({
-    color: 0x050507,
-    roughness: 0.42,
-    metalness: 0.30,
-    clearcoat: 1.0,
-    clearcoatRoughness: 0.12,
-    envMap,
-    envMapIntensity: 0.5,
-  });
-  const shell = new THREE.Mesh(shellGeo, shellMat);
-  shell.castShadow = true;
-  shell.receiveShadow = true;
-  group.add(shell);
-
-  // ── Chrome liner (mirror inner surface) ───────────────────────────
-  const linerH = halfH * 0.80; // black lip stays visible at both rims
-  const linerPts = [
-    new THREE.Vector2(Rliner, linerH),
-    new THREE.Vector2(Rliner - 0.002, linerH * 0.35),
-    new THREE.Vector2(Rliner - 0.0026, 0),
-    new THREE.Vector2(Rliner - 0.002, -linerH * 0.35),
-    new THREE.Vector2(Rliner, -linerH),
-  ];
-  const linerGeo = new THREE.LatheGeometry(linerPts, 256);
-  linerGeo.computeVertexNormals();
-  const linerMat = new THREE.MeshStandardMaterial({
-    color: 0x4a4d53,
-    roughness: 0.26,
-    metalness: 1.0,
-    envMap,
-    envMapIntensity: 0.45,
+  const ringMat = new THREE.MeshStandardMaterial({
+    color: 0x0e0f14,
+    roughness: 0.64,
+    metalness: 0.16,
     side: THREE.DoubleSide,
+    envMap,
+    envMapIntensity: 0.6,
   });
-  const liner = new THREE.Mesh(linerGeo, linerMat);
-  group.add(liner);
+  const ringMesh = new THREE.Mesh(new THREE.LatheGeometry(pts, NL), ringMat);
+  ringMesh.castShadow = true;
+  ringMesh.receiveShadow = true;
+  rg.add(ringMesh);
 
-  // ── Electronics under the liner ───────────────────────────────────
-  const eR = Rliner - 0.0035; // just proud of the liner, facing the bore axis
+  // ── Bore (inner cylinder) ─────────────────────────────────────────
+  const boreR = IR - 0.022;
+  const borePts: THREE.Vector2[] = [];
+  for (let bi = 0; bi <= 12; bi++) borePts.push(new THREE.Vector2(boreR, -BH / 2 + (BH * bi) / 12));
+  rg.add(
+    new THREE.Mesh(
+      new THREE.LatheGeometry(borePts, NL),
+      new THREE.MeshStandardMaterial({
+        color: 0x1a1e28, roughness: 0.3, metalness: 0.28, side: THREE.DoubleSide, envMap, envMapIntensity: 0.5,
+      })
+    )
+  );
 
-  const place = (mesh: THREE.Mesh, theta: number, y: number) => {
-    mesh.position.set(eR * Math.cos(theta), y, eR * Math.sin(theta));
-    mesh.lookAt(0, y, 0);
-    group.add(mesh);
+  // ── Inner chamfer ─────────────────────────────────────────────────
+  const chR = boreR - 0.008;
+  const chPts: THREE.Vector2[] = [];
+  for (let ci = 0; ci <= 6; ci++) chPts.push(new THREE.Vector2(chR, -BH * 0.14 + (BH * 0.28 * ci) / 6));
+  rg.add(
+    new THREE.Mesh(
+      new THREE.LatheGeometry(chPts, NL),
+      new THREE.MeshStandardMaterial({ color: 0x0f1218, roughness: 0.82, metalness: 0.08, side: THREE.DoubleSide })
+    )
+  );
+
+  // ── Optical sensors (bezel + glass lens) ──────────────────────────
+  const SA = Math.PI, SR = boreR - 0.003;
+  const glassMat = new THREE.MeshStandardMaterial({
+    color: 0x05030a, roughness: 0.02, metalness: 0.5,
+    emissive: new THREE.Color(0x110004), emissiveIntensity: 0.1, envMap, envMapIntensity: 0.7,
+  });
+  const bezMat = new THREE.MeshStandardMaterial({ color: 0x18202c, roughness: 0.56, metalness: 0.38, envMap, envMapIntensity: 0.5 });
+
+  const addSensor = (angle: number, sz: number, center: boolean) => {
+    const cx = Math.cos(angle) * SR, cz = Math.sin(angle) * SR;
+    const inward = new THREE.Vector3(-cx, 0, -cz).normalize();
+    const q = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), inward);
+    const bz = new THREE.Mesh(new THREE.BoxGeometry(sz * 2.1, 0.009, sz * 2.1), bezMat);
+    bz.position.set(cx, 0, cz); bz.quaternion.copy(q); rg.add(bz);
+    const gm = glassMat.clone();
+    if (center) { gm.emissiveIntensity = 0.2; gm.emissive = new THREE.Color(0x1c0008); }
+    const ln = new THREE.Mesh(new THREE.BoxGeometry(sz * 1.78, 0.012, sz * 1.78), gm);
+    ln.position.copy(new THREE.Vector3(cx, 0, cz).addScaledVector(inward, 0.004));
+    ln.quaternion.copy(q); rg.add(ln);
   };
+  addSensor(SA - 0.17, 0.047, false);
+  addSensor(SA, 0.058, true);
+  addSensor(SA + 0.17, 0.047, false);
 
-  // Gold sensor pads — two loose clusters
-  const padGeo = new THREE.CircleGeometry(0.0065, 20);
-  const padMat = new THREE.MeshStandardMaterial({
-    color: 0xd8c48e,
-    roughness: 0.32,
-    metalness: 0.85,
-    envMap,
-    envMapIntensity: 0.8,
+  // ── Gold charge contacts (disc + rim) ─────────────────────────────
+  const cMat = new THREE.MeshStandardMaterial({ color: 0x706050, roughness: 0.16, metalness: 0.94, envMap, envMapIntensity: 0.9 });
+  const cRimMat = new THREE.MeshStandardMaterial({ color: 0x483828, roughness: 0.2, metalness: 0.9, envMap, envMapIntensity: 0.8 });
+  [SA - 0.43, SA + 0.43].forEach((a) => {
+    const cx = Math.cos(a) * SR, cz = Math.sin(a) * SR;
+    const inward = new THREE.Vector3(-cx, 0, -cz).normalize();
+    const q = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), inward);
+    const d = new THREE.Mesh(new THREE.CylinderGeometry(0.017, 0.017, 0.011, 16), cMat);
+    d.position.set(cx, 0, cz); d.quaternion.copy(q); rg.add(d);
+    const r2 = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.006, 16), cRimMat);
+    r2.position.copy(new THREE.Vector3(cx, 0, cz).addScaledVector(inward, 0.002));
+    r2.quaternion.copy(q); rg.add(r2);
   });
-  const padSpots: [number, number][] = [
-    [0.30, 0.012], [0.46, -0.008], [0.58, 0.016], [0.70, -0.014], [0.86, 0.004],
-    [2.45, 0.010], [2.60, -0.012], [2.78, 0.014], [2.92, -0.004],
-  ];
-  for (const [th, y] of padSpots) place(new THREE.Mesh(padGeo, padMat), th, y);
 
-  // Dark ICs — small rectangular plates
-  const icGeo = new THREE.PlaneGeometry(0.016, 0.009);
-  const icMat = new THREE.MeshStandardMaterial({
-    color: 0x15181d,
-    roughness: 0.4,
-    metalness: 0.3,
-    envMap,
-    envMapIntensity: 0.5,
-  });
-  const icSpots: [number, number][] = [
-    [1.25, 0.002], [1.65, -0.010], [3.55, 0.008], [4.10, -0.002], [5.30, 0.010],
-  ];
-  for (const [th, y] of icSpots) place(new THREE.Mesh(icGeo, icMat), th, y);
-
-  // LEDs — red and green, always-bright
-  const ledGeo = new THREE.PlaneGeometry(0.006, 0.009);
-  const ledRed = new THREE.Mesh(ledGeo, new THREE.MeshBasicMaterial({ color: 0xff2418 }));
-  place(ledRed, 1.95, 0.001);
-  const ledGreen = new THREE.Mesh(ledGeo, new THREE.MeshBasicMaterial({ color: 0x2ee04e }));
-  place(ledGreen, 3.95, 0.003);
-
-  // Charge button — chrome disc with gold center
-  const btnMat = new THREE.MeshStandardMaterial({
-    color: 0xb8bcc2,
-    roughness: 0.12,
-    metalness: 1.0,
-    envMap,
-    envMapIntensity: 1.6,
-  });
-  place(new THREE.Mesh(new THREE.CircleGeometry(0.016, 28), btnMat), 5.85, 0);
-  const btnDot = new THREE.Mesh(new THREE.CircleGeometry(0.005, 20), padMat);
-  const btnR = eR - 0.0008;
-  btnDot.position.set(btnR * Math.cos(5.85), 0, btnR * Math.sin(5.85));
-  btnDot.lookAt(0, 0, 0);
-  group.add(btnDot);
-
-  return group;
+  rg.scale.setScalar(MODEL_SCALE);
+  return outer;
 }
