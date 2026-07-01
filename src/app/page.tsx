@@ -1,6 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import SiteLoader from '@/components/SiteLoader';
 import SiteNav from '@/components/SiteNav';
 import ThreatScene from '@/components/ThreatScene';
 import MuseumScene from '@/components/MuseumScene';
@@ -16,6 +17,9 @@ const ScrollRingExperience = dynamic(
 export default function Home() {
   return (
     <main id="top">
+      {/* Intro loader — min ~1.2s with entrance animation */}
+      <SiteLoader />
+
       {/* Persistent nav — CTA always visible */}
       <SiteNav />
 
