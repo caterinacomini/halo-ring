@@ -7,23 +7,23 @@ import styles from './SpecsScene.module.scss';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// ── Visual components for each dark card ──────────────────────────
+// ── Visual components for each dark card (inner content only) ──────
 
 function VisualWeight() {
   return (
-    <div className={styles.visual}>
+    <>
       <div className={styles.visual__ring}>◎</div>
       <div className={styles.visual__number}>10.2</div>
       <div className={styles.visual__sub}>grammi</div>
       <div className={styles.visual__divider} />
       <div className={styles.visual__label}>PESO ANELLO</div>
-    </div>
+    </>
   );
 }
 
 function VisualBattery() {
   return (
-    <div className={styles.visual}>
+    <>
       <div className={styles.visual__bar}>
         {Array.from({ length: 10 }).map((_, i) => (
           <span key={i} className={styles.visual__barSegment} style={{ opacity: 1 - i * 0.06 }} />
@@ -36,25 +36,25 @@ function VisualBattery() {
       <div className={styles.visual__sub}>giorni</div>
       <div className={styles.visual__divider} />
       <div className={styles.visual__label}>AUTONOMIA</div>
-    </div>
+    </>
   );
 }
 
 function VisualWater() {
   return (
-    <div className={styles.visual}>
+    <>
       <div className={styles.visual__waves}>≋</div>
       <div className={styles.visual__number}>100</div>
       <div className={styles.visual__sub}>metri</div>
       <div className={styles.visual__divider} />
       <div className={styles.visual__label}>IMPERMEABILITÀ</div>
-    </div>
+    </>
   );
 }
 
 function VisualEdition() {
   return (
-    <div className={styles.visual}>
+    <>
       <div className={styles.visual__counter}>
         <span className={styles.visual__counterNum}>487</span>
         <span className={styles.visual__counterSlash}>/</span>
@@ -65,28 +65,32 @@ function VisualEdition() {
       </div>
       <div className={styles.visual__divider} />
       <div className={styles.visual__label}>POSTI RIMASTI</div>
-    </div>
+    </>
   );
 }
 
 const SPECS = [
   {
     visual: VisualWeight,
+    image: '/images/img03.png',
     title: 'Peso',
     desc: 'Più leggero di un foglio A4. Lo dimentichi di avere.',
   },
   {
     visual: VisualBattery,
+    image: '/images/img06.png',
     title: 'Autonomia',
     desc: 'Dieci giorni di sensori continui. Nessun caricatore in borsa.',
   },
   {
     visual: VisualWater,
+    image: '/images/img01.png',
     title: 'Impermeabilità',
     desc: 'Nuota, immergiti. Certificato IP68 fino a 100 metri.',
   },
   {
     visual: VisualEdition,
+    image: '/images/img05.png',
     title: 'Edizione limitata',
     desc: 'Solo 500 esemplari nel mondo. Obsidian Edition, per sempre.',
   },
@@ -138,7 +142,21 @@ export default function SpecsScene() {
               ref={(el) => { cardsRef.current[i] = el; }}
               className={styles.card}
             >
-              <Visual />
+              <div className={styles.visual}>
+                {s.image && (
+                  <img
+                    className={styles.visual__photo}
+                    src={s.image}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                  />
+                )}
+                <span className={styles.visual__scrim} aria-hidden="true" />
+                <div className={styles.visual__content}>
+                  <Visual />
+                </div>
+              </div>
               <div className={styles.card__body}>
                 <h3 className={styles.card__title}>{s.title}</h3>
                 <p className={styles.card__desc}>{s.desc}</p>
