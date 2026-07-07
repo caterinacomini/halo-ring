@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from './FeaturesScene.module.scss';
@@ -14,6 +15,7 @@ const FEATURES = [
     label: '01',
     title: 'Aura-Gen™ Biosensor',
     body: 'Doppio fotodiodo. HRV, SpO₂ e temperatura cutanea ogni secondo.',
+    image: '/images/sensore.png',
   },
   {
     id: 'predict',
@@ -21,6 +23,7 @@ const FEATURES = [
     label: '02',
     title: 'Predizione 8 minuti',
     body: 'Riconosce i pattern HRV che precedono un picco di cortisolo e ti avvisa prima.',
+    image: '/images/8 minuti.png',
   },
   {
     id: 'ceramic',
@@ -28,10 +31,13 @@ const FEATURES = [
     label: '03',
     title: 'Ceramica opaca',
     body: 'Titanio sinterizzato. Anti-graffio. Impermeabile fino a 100 m.',
+    image: '/images/Ceramica opaca.png',
   },
 ];
 
 export default function FeaturesScene() {
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [sectionActive, setSectionActive] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const linesRef = useRef<(SVGLineElement | null)[]>([]);
   const rowsRef = useRef<(HTMLDivElement | null)[]>([]);
@@ -60,6 +66,10 @@ export default function FeaturesScene() {
         start: 'top top',
         end: 'bottom bottom',
         scrub: 1.4,
+        onEnter: () => setSectionActive(true),
+        onLeave: () => { setSectionActive(false); setHoveredId(null); },
+        onEnterBack: () => setSectionActive(true),
+        onLeaveBack: () => { setSectionActive(false); setHoveredId(null); },
       },
     });
 
@@ -103,7 +113,12 @@ export default function FeaturesScene() {
 
           <ul className={styles.list}>
             {FEATURES.map((f, i) => (
-              <li key={f.id} className={styles.item}>
+              <li
+                key={f.id}
+                className={`${styles.item} ${hoveredId === f.id ? styles.item__active : ''}`}
+                onMouseEnter={() => sectionActive && setHoveredId(f.id)}
+                onMouseLeave={() => setHoveredId(null)}
+              >
                 {/* Reveal line — a simple SVG line drawn via strokeDashoffset */}
                 <svg
                   className={styles.item__lineSvg}
@@ -133,6 +148,23 @@ export default function FeaturesScene() {
               </li>
             ))}
           </ul>
+        </div>
+
+        {/* Hover image panel — right side, after inner so it paints on top */}
+        <div className={styles.imagePanel}>
+          {FEATURES.map((f) => (
+            <div
+              key={f.id}
+              className={`${styles.imageSlot} ${hoveredId === f.id ? styles.imageSlot__visible : ''}`}
+            >
+              <Image
+                src={f.image}
+                alt={f.title}
+                fill
+                style={{ objectFit: 'cover', objectPosition: 'calc(50% - 80px) center' }}
+              />
+            </div>
+          ))}
         </div>
       </div>
     </section>

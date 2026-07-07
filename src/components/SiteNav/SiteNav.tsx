@@ -1,14 +1,19 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import styles from './SiteNav.module.scss';
 
-/**
- * Persistent top navigation. Always visible across the whole page so the
- * "Acquista" CTA — the landing's single conversion action — is never hidden.
- */
 export default function SiteNav() {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 0);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   return (
-    <header className={styles.nav}>
+    <header className={`${styles.nav} ${scrolled ? styles.scrolled : ''}`}>
       <a href="#top" className={styles.logo} aria-label="Halo Labs — home">
         <svg className={styles.mark} viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
           <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" strokeWidth="1.2" />

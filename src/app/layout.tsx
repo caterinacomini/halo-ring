@@ -3,27 +3,32 @@ import localFont from "next/font/local";
 import { DM_Sans } from "next/font/google";
 import "@/styles/globals.scss";
 
-const recklessNeue = localFont({
+const editorialNew = localFont({
   src: [
     {
-      path: "../../public/fonts/RecklessNeue-Light.otf",
+      path: "./fonts/EditorialNew-Ultralight.otf",
+      weight: "200",
+      style: "normal",
+    },
+    {
+      path: "./fonts/EditorialNew-Light.otf",
       weight: "300",
       style: "normal",
     },
     {
-      path: "../../public/fonts/RecklessNeue-LightItalic.otf",
-      weight: "300",
-      style: "italic",
-    },
-    {
-      path: "../../public/fonts/RecklessNeue-Regular.otf",
+      path: "./fonts/EditorialNew-Regular.otf",
       weight: "400",
       style: "normal",
     },
     {
-      path: "../../public/fonts/RecklessNeue-RegularItalic.otf",
-      weight: "400",
-      style: "italic",
+      path: "./fonts/EditorialNew-Medium.otf",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "./fonts/EditorialNew-Bold.otf",
+      weight: "700",
+      style: "normal",
     },
   ],
   variable: "--font-serif",
@@ -47,7 +52,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${recklessNeue.variable} ${dmSans.variable}`}>
+    <html lang="en" className={`${editorialNew.variable} ${dmSans.variable}`}>
       <body>{children}</body>
     </html>
   );

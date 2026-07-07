@@ -18,10 +18,12 @@ $spacing-3xl: 4rem;
 $color-primary: #000000;
 $color-secondary: #ffffff;
 $color-accent: #cccccc;
+$color-bg: #fdf8f0;
 
 // Typography
 $font-base: 16px;
-$font-family-primary: 'Inter', sans-serif;
+$font-family-primary: var(--font-serif);
+$font-family-sans: var(--font-sans);
 
 // Transitions
 $transition-default: 0.3s ease;

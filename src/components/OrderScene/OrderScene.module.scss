@@ -69,14 +69,14 @@
   margin: 0;
 
   em {
-    font-style: italic;
+    
     color: rgba(20, 18, 16, 0.26);
   }
 }
 
 .body {
   font-family: var(--font-sans);
-  font-size: rem-calc(10);
+  font-size: rem-calc(14);
   line-height: 1.7;
   letter-spacing: 0.04em;
   color: rgba(20, 18, 16, 0.22);
@@ -281,7 +281,7 @@
 
 .success__body {
   font-family: var(--font-sans);
-  font-size: rem-calc(10);
+  font-size: rem-calc(14);
   line-height: 1.6;
   letter-spacing: 0.04em;
   color: rgba(20, 18, 16, 0.22);

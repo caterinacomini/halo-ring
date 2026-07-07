@@ -11,10 +11,21 @@
   align-items: center;
   gap: rem-calc(16);
   padding: rem-calc(28) rem-calc(48);
-  pointer-events: none; // let scroll pass through the empty middle
+  pointer-events: none;
+  background: transparent;
+  transition: background 0.3s ease, padding 0.3s ease;
 
   @include breakpoint-sm {
     padding: rem-calc(32) 8vw;
+  }
+
+  &.scrolled {
+    background: rgba(253, 248, 240, 0.82);
+    backdrop-filter: blur(20px) saturate(180%) brightness(1.04);
+    -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(1.04);
+    box-shadow: 0 0.5px 0 rgba(0, 0, 0, 0.08), 0 1px 12px rgba(0, 0, 0, 0.04);
+    padding-top: rem-calc(16);
+    padding-bottom: rem-calc(16);
   }
 }
 
@@ -49,8 +60,8 @@
   gap: rem-calc(10);
   padding: rem-calc(10) rem-calc(20);
   border-radius: 999px;
-  background: rgba(0, 0, 0, 0.55);
-  color: rgba(255, 255, 255, 0.88);
+  background: #1a1a1a;
+  color: #ffffff;
   font-family: var(--font-sans);
   font-size: rem-calc(13);
   font-weight: 400;

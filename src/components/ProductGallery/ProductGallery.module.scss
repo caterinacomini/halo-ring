@@ -1,0 +1,182 @@
+@use '@/styles/abstracts' as *;
+
+// ── Section — 400vh dà 300vh di scroll con sticky ─────────────
+.section {
+  height: 700vh;
+}
+
+// ── Sticky wrapper — CSS sticky, nessuna manipolazione DOM ────
+.sticky {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  overflow: hidden;
+  background: #fdf8f0;
+}
+
+// ── Banner ────────────────────────────────────────────────────
+.banner {
+  position: relative;
+  flex-shrink: 0;
+  height: 100%;
+  overflow: hidden;
+  will-change: width;
+}
+
+.banner__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.38) 0%,
+    rgba(0, 0, 0, 0) 65%
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: rem-calc(56) rem-calc(48) rem-calc(56) rem-calc(64);
+}
+
+.banner__eyebrow {
+  font-family: var(--font-sans);
+  font-size: rem-calc(11);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: rem-calc(12);
+}
+
+.banner__title {
+  font-family: var(--font-serif);
+  font-size: rem-calc(56);
+  font-weight: 300;
+  line-height: 1.08;
+  color: #ffffff;
+}
+
+// ── Cards panel — overflow hidden, il track si muove via GSAP ─
+.panel {
+  flex-shrink: 0;
+  height: 100%;
+  overflow: hidden;
+  will-change: width, opacity;
+}
+
+.panel__track {
+  display: flex;
+  align-items: stretch;
+  height: 100%;
+  padding: rem-calc(28) rem-calc(24);
+  padding-right: rem-calc(72);
+  gap: 0;
+  will-change: transform;
+}
+
+// ── Card — quasi quadrata, la 2a sbuca di ~64px dal bordo ─────
+.card {
+  flex-shrink: 0;
+  width: calc((50vw - 160px) * 0.9);
+  height: calc(50vw - 80px);
+  display: flex;
+  flex-direction: column;
+  border-radius: rem-calc(16);
+  overflow: hidden;
+  background: #ffffff;
+  align-self: center;
+  transform: scale(0.88);
+  margin-inline: calc((50vw - 160px) * 0.9 * -0.06 + 16px);
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.card__image {
+  flex: 1;
+  background: #e2e0db;
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.card__img {
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.card__img__hover {
+  opacity: 0;
+  transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.card__hovered {
+  .card__img {
+    transform: scale(1.04);
+  }
+
+  .card__img__hover {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+}
+
+.card__info {
+  padding: rem-calc(16) rem-calc(20);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: rem-calc(12);
+}
+
+.card__text {
+  display: flex;
+  flex-direction: column;
+  gap: rem-calc(2);
+}
+
+.card__material {
+  font-family: var(--font-sans);
+  font-size: rem-calc(10);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.38);
+}
+
+.card__variant {
+  font-family: var(--font-serif);
+  font-size: rem-calc(18);
+  font-weight: 300;
+  color: #1a1a1a;
+  line-height: 1.2;
+}
+
+.card__price {
+  font-family: var(--font-sans);
+  font-size: rem-calc(12);
+  color: rgba(0, 0, 0, 0.45);
+}
+
+// ── CTA cerchio con freccia ───────────────────────────────────
+.card__cta {
+  flex-shrink: 0;
+  width: rem-calc(44);
+  height: rem-calc(44);
+  border-radius: 50%;
+  background: #1a1a1a;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, transform 0.2s ease;
+
+  svg {
+    width: rem-calc(16);
+    height: rem-calc(16);
+  }
+
+  &:hover {
+    background: #333;
+    transform: scale(1.08);
+  }
+}

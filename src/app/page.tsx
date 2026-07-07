@@ -4,10 +4,10 @@ import dynamic from 'next/dynamic';
 import SiteLoader from '@/components/SiteLoader';
 import SiteNav from '@/components/SiteNav';
 import ThreatScene from '@/components/ThreatScene';
-import MuseumScene from '@/components/MuseumScene';
 import FeaturesScene from '@/components/FeaturesScene';
 import SpecsScene from '@/components/SpecsScene';
 import OrderScene from '@/components/OrderScene';
+import ProductGallery from '@/components/ProductGallery';
 
 const ScrollRingExperience = dynamic(
   () => import('@/components/ScrollRingExperience'),
@@ -26,11 +26,11 @@ export default function Home() {
       {/* S1 — HERO + scroll-scrubbed ring chapters */}
       <ScrollRingExperience />
 
-      {/* S2+3 — SIGNAL (threat → anticipation in one scene) */}
-      <ThreatScene />
+      {/* S2 — PRODUCT GALLERY */}
+      <ProductGallery />
 
-      {/* S4 — MUSEUM */}
-      <MuseumScene />
+      {/* S3+4 — SIGNAL (threat → anticipation in one scene) */}
+      <ThreatScene />
 
       {/* S5 — FEATURES */}
       <FeaturesScene />
