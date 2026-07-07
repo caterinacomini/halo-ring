@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { createHaloRing } from '@/components/three/createHaloRing';
 import styles from './HeroScene.module.scss';
 
 export default function HeroScene() {
@@ -87,80 +88,19 @@ export default function HeroScene() {
     cyc.receiveShadow = true;
     scene.add(cyc);
 
-    // ── Ring geometry ─────────────────────────────────────────
-    const innerR = 0.162, outerR = 0.205, halfH = 0.040;
-    const cornerR = 0.010, comfortBulge = 0.004;
-    const arcS = 10, innerS = 16;
-
-    const ringProfile: THREE.Vector2[] = [];
-    ringProfile.push(new THREE.Vector2(innerR, halfH));
-    ringProfile.push(new THREE.Vector2(outerR - cornerR, halfH));
-    for (let i = 1; i <= arcS; i++) {
-      const a = Math.PI / 2 - (Math.PI / 2) * (i / arcS);
-      ringProfile.push(new THREE.Vector2(
-        outerR - cornerR + cornerR * Math.cos(a),
-        halfH - cornerR + cornerR * Math.sin(a)
-      ));
-    }
-    for (let i = 1; i <= arcS; i++) {
-      const a = -(Math.PI / 2) * (i / arcS);
-      ringProfile.push(new THREE.Vector2(
-        outerR - cornerR + cornerR * Math.cos(a),
-        -halfH + cornerR + cornerR * Math.sin(a)
-      ));
-    }
-    ringProfile.push(new THREE.Vector2(innerR, -halfH));
-    for (let i = 1; i <= innerS; i++) {
-      const t = i / innerS;
-      const y = -halfH + 2 * halfH * t;
-      ringProfile.push(new THREE.Vector2(innerR + comfortBulge * Math.sin(Math.PI * t), y));
-    }
-
-    const ringGeo = new THREE.LatheGeometry(ringProfile, 256);
-    ringGeo.computeVertexNormals();
-    const ringMat = new THREE.MeshStandardMaterial({
-      color: 0x18181c,
-      roughness: 0.38,
-      metalness: 0.92,
-      envMapIntensity: 1.1,
-    });
-    const ring = new THREE.Mesh(ringGeo, ringMat);
-    ring.castShadow = true;
-    ring.receiveShadow = true;
-
-    // ── Sensors ───────────────────────────────────────────────
-    const sensorGeo = new THREE.CircleGeometry(0.014, 28);
-    const sensorMat = new THREE.MeshStandardMaterial({
-      color: 0x10141a,
-      roughness: 0.15,
-      metalness: 0.4,
-      emissive: 0x1a2535,
-      emissiveIntensity: 0.5,
-    });
-    const ringGroup = new THREE.Group();
-    ringGroup.add(ring);
-    for (let i = 0; i < 3; i++) {
-      const theta = (i / 3) * Math.PI * 2 + Math.PI * 0.85;
-      const s = new THREE.Mesh(sensorGeo, sensorMat);
-      s.position.set(innerR * Math.cos(theta), 0, innerR * Math.sin(theta));
-      s.lookAt(0, 0, 0);
-      ringGroup.add(s);
-    }
-
-    // Oura-style pose: ring stands in three-quarter view — you look
-    // into the bore from above-front, band sweeping down to the right.
-    ringGroup.rotation.x = -Math.PI / 4.2;  // ~-43°: ¾ view into the bore
-    ringGroup.rotation.z = -0.30;           // lean right
-    ringGroup.scale.setScalar(4.6);
-    ringGroup.position.set(1.05, 0.95, 0);  // floats above floor, right side
-    scene.add(ringGroup);
-
-    // ── Environment map ───────────────────────────────────────
+    // ── Ring (shared product model — same as the scroll scene) ─
     const pmrem = new THREE.PMREMGenerator(renderer);
     const envTex = pmrem.fromScene(new RoomEnvironment()).texture;
-    ringMat.envMap = envTex;
-    ringMat.needsUpdate = true;
     pmrem.dispose();
+
+    const ringGroup = createHaloRing(envTex);
+
+    // Oura-style pose: ¾ view into the bore, floating on the right
+    ringGroup.rotation.x = -Math.PI / 4.2;
+    ringGroup.rotation.z = -0.30;
+    ringGroup.scale.setScalar(4.6);
+    ringGroup.position.set(1.05, 0.95, 0);
+    scene.add(ringGroup);
 
     // ── Resize ────────────────────────────────────────────────
     const onResize = () => {
