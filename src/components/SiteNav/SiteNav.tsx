@@ -19,7 +19,7 @@ export default function SiteNav() {
           <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" strokeWidth="1.2" />
           <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.55" />
         </svg>
-        <span className={styles.wordmark}>HALO LABS</span>
+        <span className={styles.wordmark}>HALO RING</span>
       </a>
 
       <a href="#order" className={styles.cta}>

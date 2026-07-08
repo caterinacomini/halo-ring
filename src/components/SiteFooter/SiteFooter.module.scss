@@ -1,0 +1,239 @@
+@use '@/styles/abstracts' as *;
+
+.footer {
+  position: relative;
+  background: #fdf8f0;
+  border-top: 1px solid rgba(20, 18, 16, 0.08);
+  padding: rem-calc(80) rem-calc(48) rem-calc(32);
+  overflow: hidden;
+  z-index: 30;
+
+  @include breakpoint-sm {
+    padding: rem-calc(96) 8vw rem-calc(40);
+  }
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  gap: rem-calc(64);
+}
+
+// ── Top: tagline + newsletter ────────────────────────────────────
+
+.top {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: rem-calc(48);
+
+  @include breakpoint-md {
+    grid-template-columns: 1fr 1fr;
+    gap: rem-calc(64);
+    align-items: end;
+  }
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: rem-calc(24);
+}
+
+.tagline {
+  font-family: var(--font-serif);
+  font-size: clamp(rem-calc(28), 3.5vw, rem-calc(48));
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: rgba(20, 18, 16, 0.85);
+  margin: 0;
+
+  em {
+    font-style: italic;
+    color: rgba(20, 18, 16, 0.35);
+  }
+}
+
+.mark {
+  font-family: var(--font-sans);
+  font-size: rem-calc(13);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(20, 18, 16, 0.55);
+}
+
+.newsletter {
+  display: flex;
+  flex-direction: column;
+  gap: rem-calc(10);
+}
+
+.newsletter__label {
+  font-family: var(--font-sans);
+  font-size: rem-calc(15);
+  color: rgba(20, 18, 16, 0.85);
+  margin: 0;
+}
+
+.newsletter__hint {
+  font-family: var(--font-sans);
+  font-size: rem-calc(13);
+  line-height: 1.5;
+  color: rgba(20, 18, 16, 0.45);
+  margin: 0 0 rem-calc(8);
+}
+
+.newsletter__form {
+  display: flex;
+  align-items: center;
+  gap: rem-calc(8);
+  max-width: rem-calc(400);
+  border-bottom: 1px solid rgba(20, 18, 16, 0.22);
+  padding-bottom: rem-calc(8);
+  transition: border-color 0.2s ease;
+
+  &:focus-within {
+    border-color: rgba(20, 18, 16, 0.6);
+  }
+}
+
+.newsletter__input {
+  flex: 1;
+  font-family: var(--font-sans);
+  font-size: rem-calc(15);
+  color: rgba(20, 18, 16, 0.85);
+  background: none;
+  border: none;
+  outline: none;
+
+  &::placeholder {
+    color: rgba(20, 18, 16, 0.3);
+  }
+}
+
+.newsletter__btn {
+  flex-shrink: 0;
+  width: rem-calc(36);
+  height: rem-calc(36);
+  border-radius: 50%;
+  background: rgba(20, 18, 16, 0.82);
+  color: #fdf8f0;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, transform 0.15s ease;
+
+  &:hover {
+    background: rgba(20, 18, 16, 1);
+  }
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+.newsletter__done {
+  font-family: var(--font-sans);
+  font-size: rem-calc(15);
+  color: rgba(20, 18, 16, 0.6);
+  margin: 0;
+}
+
+// ── Middle: columns ──────────────────────────────────────────────
+
+.cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: rem-calc(32);
+  padding-top: rem-calc(40);
+  border-top: 1px solid rgba(20, 18, 16, 0.08);
+
+  @include breakpoint-sm {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: rem-calc(12);
+}
+
+.col__title {
+  font-family: var(--font-sans);
+  font-size: rem-calc(10);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(20, 18, 16, 0.4);
+  margin-bottom: rem-calc(4);
+}
+
+.col__link {
+  font-family: var(--font-sans);
+  font-size: rem-calc(15);
+  color: rgba(20, 18, 16, 0.65);
+  text-decoration: none;
+  width: fit-content;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: rgba(20, 18, 16, 0.95);
+  }
+}
+
+// ── Bottom: legal ────────────────────────────────────────────────
+
+.legal {
+  display: flex;
+  flex-direction: column;
+  gap: rem-calc(12);
+  justify-content: space-between;
+  padding-top: rem-calc(28);
+  border-top: 1px solid rgba(20, 18, 16, 0.08);
+  font-family: var(--font-sans);
+  font-size: rem-calc(12);
+  letter-spacing: 0.04em;
+  color: rgba(20, 18, 16, 0.4);
+
+  @include breakpoint-sm {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.legal__links {
+  display: flex;
+  align-items: center;
+  gap: rem-calc(20);
+}
+
+.legal__link {
+  color: rgba(20, 18, 16, 0.5);
+  text-decoration: none;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: rgba(20, 18, 16, 0.85);
+  }
+}
+
+// ── Oversized wordmark ───────────────────────────────────────────
+
+.wordmark {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  font-size: 21vw;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  color: rgba(20, 18, 16, 0.07);
+  text-align: center;
+  white-space: nowrap;
+  user-select: none;
+  margin-top: rem-calc(24);
+
+  // Break out of the footer side padding to span the full viewport
+  width: 100vw;
+  margin-left: 50%;
+  transform: translateX(-50%);
+}

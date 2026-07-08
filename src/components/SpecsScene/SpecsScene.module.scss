@@ -3,219 +3,205 @@
 .section {
   position: relative;
   background: #fdf8f0;
-  padding: rem-calc(100) rem-calc(48) rem-calc(100);
-  overflow: hidden;
+  padding: rem-calc(100) rem-calc(48);
+  margin-top: rem-calc(-20);
   z-index: 30;
 
   @include breakpoint-sm {
-    padding: rem-calc(120) 8vw rem-calc(120);
+    padding: rem-calc(120) 8vw;
   }
 }
 
-// ── Grid ──────────────────────────────────────────────────────────
+// ── Outer rounded box ─────────────────────────────────────────────
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: rem-calc(16);
+.box {
+  position: relative;
+  border-radius: rem-calc(24);
+  overflow: hidden;
+  min-height: rem-calc(620);
+  display: flex;
+  align-items: stretch;
+}
+
+// ── Full-bleed background image ───────────────────────────────────
+
+.box__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.box__bgSlot {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  img {
+    object-fit: cover;
+    object-position: center right;
+  }
+
+  &--visible {
+    opacity: 1;
+  }
+}
+
+.box__scrim {
+  display: none;
+}
+
+// ── Content overlay (left side) ───────────────────────────────────
+
+.box__content {
+  position: relative;
+  z-index: 2;
+  width: 42%;
+  padding: rem-calc(56) rem-calc(48);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 
   @include breakpoint-sm {
-    grid-template-columns: repeat(4, 1fr);
-    gap: rem-calc(20);
+    width: 38%;
+    padding: rem-calc(64) rem-calc(52);
   }
 }
 
-// ── Card ──────────────────────────────────────────────────────────
+// ── Up/down nav arrows ────────────────────────────────────────────
 
-.card {
+.listWrap {
   display: flex;
-  flex-direction: column;
-  gap: rem-calc(20);
+  align-items: center;
+  gap: rem-calc(16);
 }
 
-.card__body {
+.navArrows {
   display: flex;
   flex-direction: column;
-  gap: rem-calc(8);
-  padding: 0 rem-calc(4);
+  gap: rem-calc(6);
+  flex-shrink: 0;
+  align-self: center;
 }
 
-.card__title {
-  font-family: var(--font-serif);
-  font-size: rem-calc(18);
-  font-weight: 300;
-  color: rgba(20, 18, 16, 0.72);
+.navBtn {
+  width: rem-calc(32);
+  height: rem-calc(32);
+  border-radius: 50%;
+  background: rgba(253, 248, 240, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(20, 18, 16, 0.08);
+  box-shadow: 0 2px 12px rgba(20, 18, 16, 0.06);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(20, 18, 16, 0.55);
+  transition: color 0.2s ease, box-shadow 0.2s ease;
+
+  svg {
+    width: rem-calc(14);
+    height: rem-calc(14);
+  }
+
+  &:hover:not(:disabled) {
+    color: rgba(20, 18, 16, 0.85);
+    box-shadow: 0 4px 20px rgba(20, 18, 16, 0.1);
+  }
+
+  &:disabled {
+    opacity: 0.2;
+    cursor: default;
+  }
+}
+
+// ── Accordion list ────────────────────────────────────────────────
+
+.list {
+  list-style: none;
   margin: 0;
-  line-height: 1.2;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: rem-calc(10);
+  flex: 1;
 }
 
-.card__desc {
+.item {
+  display: flex;
+}
+
+// ── Closed: pill button ───────────────────────────────────────────
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: rem-calc(10);
+  padding: rem-calc(10) rem-calc(18) rem-calc(10) rem-calc(12);
+  border-radius: rem-calc(999);
+  background: rgba(253, 248, 240, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(20, 18, 16, 0.08);
+  box-shadow: 0 2px 12px rgba(20, 18, 16, 0.06);
+  cursor: pointer;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    background: rgba(253, 248, 240, 0.96);
+    box-shadow: 0 4px 20px rgba(20, 18, 16, 0.1);
+  }
+}
+
+.pill__icon {
+  flex-shrink: 0;
+  width: rem-calc(22);
+  height: rem-calc(22);
+  border-radius: 50%;
+  border: 1px solid rgba(20, 18, 16, 0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: rem-calc(10);
+    height: rem-calc(10);
+    color: rgba(20, 18, 16, 0.55);
+  }
+}
+
+.pill__label {
+  font-family: var(--font-sans);
+  font-size: rem-calc(14);
+  color: rgba(20, 18, 16, 0.68);
+}
+
+// ── Open: text card ───────────────────────────────────────────────
+
+.openCard {
+  background: rgba(253, 248, 240, 1);
+  border-radius: rem-calc(16);
+  padding: rem-calc(20) rem-calc(24);
+  width: fit-content;
+  animation: cardIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.openCard__text {
   font-family: var(--font-sans);
   font-size: rem-calc(14);
   line-height: 1.7;
-  letter-spacing: 0.03em;
-  color: rgba(20, 18, 16, 0.32);
+  letter-spacing: 0.01em;
+  color: rgba(20, 18, 16, 0.55);
   margin: 0;
 }
 
-// ── Dark visual card ──────────────────────────────────────────────
-
-.visual {
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  background: rgba(20, 18, 16, 0.82);
-  border-radius: rem-calc(20);
-  min-height: rem-calc(200);
-
-  @include breakpoint-sm {
-    min-height: rem-calc(240);
-  }
-}
-
-.visual__photo {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.62;
-}
-
-.visual__scrim {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  background: linear-gradient(
-    to top,
-    rgba(16, 14, 12, 0.92) 0%,
-    rgba(16, 14, 12, 0.5) 55%,
-    rgba(16, 14, 12, 0.32) 100%
-  );
-}
-
-.visual__content {
-  position: relative;
-  z-index: 1;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  gap: rem-calc(6);
-  padding: rem-calc(28) rem-calc(24);
-}
-
-.visual__ring {
-  font-size: rem-calc(28);
-  color: rgba(255, 255, 255, 0.3);
-  line-height: 1;
-  margin-bottom: rem-calc(8);
-}
-
-.visual__waves {
-  font-size: rem-calc(22);
-  color: rgba(255, 255, 255, 0.25);
-  letter-spacing: 0.1em;
-  margin-bottom: rem-calc(8);
-}
-
-.visual__number {
-  font-family: var(--font-serif);
-  font-size: clamp(rem-calc(40), 4vw, rem-calc(56));
-  font-weight: 300;
-  line-height: 1;
-  letter-spacing: -0.02em;
-  color: rgba(255, 255, 255, 0.88);
-}
-
-.visual__sub {
-  font-family: var(--font-sans);
-  font-size: rem-calc(9);
-  letter-spacing: 0.22em;
-  text-transform: lowercase;
-  color: rgba(255, 255, 255, 0.35);
-}
-
-.visual__divider {
-  width: rem-calc(32);
-  height: 1px;
-  background: rgba(255, 255, 255, 0.14);
-  margin: rem-calc(8) 0 rem-calc(4);
-}
-
-.visual__label {
-  font-family: var(--font-sans);
-  font-size: rem-calc(8);
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.28);
-}
-
-// ── Battery bar ───────────────────────────────────────────────────
-
-.visual__bar {
-  display: flex;
-  gap: rem-calc(3);
-  margin-bottom: rem-calc(8);
-}
-
-.visual__barSegment {
-  width: rem-calc(6);
-  height: rem-calc(20);
-  border-radius: rem-calc(2);
-  background: rgba(255, 255, 255, 0.75);
-
-  &--empty {
-    background: rgba(255, 255, 255, 0.12);
-    opacity: 1 !important;
-  }
-}
-
-// ── Edition counter ───────────────────────────────────────────────
-
-.visual__counter {
-  display: flex;
-  align-items: baseline;
-  gap: rem-calc(4);
-  margin-bottom: rem-calc(10);
-}
-
-.visual__counterNum {
-  font-family: var(--font-serif);
-  font-size: clamp(rem-calc(36), 3.5vw, rem-calc(52));
-  font-weight: 300;
-  line-height: 1;
-  letter-spacing: -0.02em;
-  color: rgba(255, 255, 255, 0.88);
-}
-
-.visual__counterSlash {
-  font-family: var(--font-serif);
-  font-size: rem-calc(20);
-  font-weight: 300;
-  color: rgba(255, 255, 255, 0.25);
-}
-
-.visual__counterTotal {
-  font-family: var(--font-serif);
-  font-size: rem-calc(20);
-  font-weight: 300;
-  color: rgba(255, 255, 255, 0.35);
-}
-
-.visual__progress {
-  width: 100%;
-  height: rem-calc(3);
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: rem-calc(2);
-  overflow: hidden;
-  margin-bottom: rem-calc(6);
-}
-
-.visual__progressFill {
-  display: block;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.5);
-  border-radius: rem-calc(2);
+.openCard__title {
+  font-weight: 600;
+  color: rgba(20, 18, 16, 0.85);
 }

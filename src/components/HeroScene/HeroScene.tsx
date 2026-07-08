@@ -99,7 +99,7 @@ export default function HeroScene() {
     ringGroup.rotation.x = -Math.PI / 4.2;
     ringGroup.rotation.z = -0.30;
     ringGroup.scale.setScalar(4.6);
-    ringGroup.position.set(1.05, 0.95, 0);
+    ringGroup.position.set(1.05, 0.29, 0);
     scene.add(ringGroup);
 
     // ── Resize ────────────────────────────────────────────────
@@ -124,7 +124,7 @@ export default function HeroScene() {
       ringGroup.rotation.y += dt * 0.18;
 
       // Subtle float
-      ringGroup.position.y = 0.95 + Math.sin(t * 0.55) * 0.022;
+      ringGroup.position.y = 0.29 + Math.sin(t * 0.55) * 0.022;
 
       // Breathing light
       key.intensity = 2.8 + Math.sin(t * 0.28) * 0.18;

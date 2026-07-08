@@ -4,91 +4,125 @@ import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import styles from './SiteLoader.module.scss';
 
-/**
- * Intro loader. The ring slides in from the side while the title reveals
- * line-by-line from behind a mask (GSAP). Holds a ~1.2s minimum, then
- * lifts away to hand off to the hero (same layout, seamless).
- */
+const WORDS = ['Now', 'is', 'the', 'time.'];
+const ITALIC_FROM = 1;
+
+const IMAGES = [
+  '/images/peso.png',
+  '/images/impermeabilita.png',
+  '/images/pesca.png',
+  '/images/img04.png',
+  '/images/tipo.png',
+  '/images/8 minuti.png',
+  '/images/immagine ambientata anello oro.png',
+  '/images/playa.png',
+];
+
+// Scattered collage tiles (Floema-style). Positions in %, size in px.
+// left/top ordered so consecutive tiles land far apart → round-robin
+// image assignment never places the same image next to itself.
+const TILES = [
+  { left: 22, top: 16, w: 150 },
+  { left: 48, top: 8, w: 116 },
+  { left: 71, top: 14, w: 200 },
+  { left: 12, top: 40, w: 160 },
+  { left: 35, top: 30, w: 128 },
+  { left: 60, top: 24, w: 112 },
+  { left: 83, top: 34, w: 150 },
+  { left: 20, top: 64, w: 172 },
+  { left: 41, top: 74, w: 136 },
+  { left: 63, top: 66, w: 120 },
+  { left: 79, top: 60, w: 188, img: '/images/Ceramica opaca.png' },
+  { left: 30, top: 50, w: 112 },
+  { left: 53, top: 56, w: 104 },
+  { left: 88, top: 78, w: 160 },
+  { left: 8, top: 80, w: 146 },
+  { left: 67, top: 84, w: 150 },
+];
+
 export default function SiteLoader() {
-  const rootRef = useRef<HTMLDivElement>(null);
-  const ringRef = useRef<HTMLDivElement>(null);
-  const shadowRef = useRef<HTMLDivElement>(null);
-  const linesRef = useRef<HTMLDivElement>(null);
+  const rootRef  = useRef<HTMLDivElement>(null);
+  const wordsRef = useRef<(HTMLSpanElement | null)[]>([]);
+  const tilesRef = useRef<(HTMLDivElement | null)[]>([]);
   const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
-    const root = rootRef.current;
-    if (!root) return;
+    const root  = rootRef.current;
+    const els   = wordsRef.current.filter(Boolean) as HTMLSpanElement[];
+    const tiles = tilesRef.current.filter(Boolean) as HTMLDivElement[];
+    if (!root || els.length === 0) return;
 
-    gsap.set(root, { yPercent: 0 });
-    const lines = linesRef.current?.querySelectorAll('[data-line-inner]') ?? [];
+    // Start deep in Z-space (far, converging to the vanishing point)
+    gsap.set(tiles, { z: -2000, opacity: 0, filter: 'blur(6px)', transformOrigin: '50% 50%' });
 
-    // Entrance
-    const intro = gsap.timeline();
-    intro
-      .fromTo(
-        ringRef.current,
-        { xPercent: 150, opacity: 0, rotate: -20 },
-        { xPercent: 0, opacity: 1, rotate: 0, duration: 1.1, ease: 'power3.out' },
-        0
-      )
-      .fromTo(
-        shadowRef.current,
-        { opacity: 0, scaleX: 0.35 },
-        { opacity: 1, scaleX: 1, duration: 0.9, ease: 'power2.out' },
-        0.2
-      )
-      .fromTo(
-        lines,
-        { yPercent: 120, opacity: 0 },
-        { yPercent: 0, opacity: 1, duration: 0.9, ease: 'power4.out', stagger: 0.12 },
-        0.35
+    const tl = gsap.timeline();
+
+    // Phase 1 — words blur in, grey → black
+    els.forEach((el, i) => {
+      tl.fromTo(
+        el,
+        { opacity: 0, filter: 'blur(22px)', color: 'rgba(20,18,16,0.25)' },
+        { opacity: 1, filter: 'blur(0px)', color: 'rgba(20,18,16,0.85)', duration: 0.75, ease: 'power2.out' },
+        i === 0 ? 0 : '-=0.45'
       );
+    });
 
-    // Guaranteed ~1.2s minimum, then lift away to reveal the site
-    const timer = window.setTimeout(() => {
-      gsap
-        .timeline({ onComplete: () => setHidden(true) })
-        .to(ringRef.current, { xPercent: -30, opacity: 0, duration: 0.5, ease: 'power2.in' }, 0)
-        .to(lines, { yPercent: -120, opacity: 0, duration: 0.45, ease: 'power2.in', stagger: 0.06 }, 0)
-        .to(shadowRef.current, { opacity: 0, duration: 0.35 }, 0)
-        .to(root, { yPercent: -100, duration: 0.75, ease: 'power3.inOut' }, '-=0.15');
-    }, 1200);
+    // Phase 2 — images drift slowly forward out of depth (Floema pace)
+    tl.to({}, { duration: 0.35 });
+    tl.to(tiles, {
+      z: 0,
+      opacity: 1,
+      filter: 'blur(0px)',
+      duration: 2.0,
+      ease: 'power1.out',
+      stagger: { each: 0.07, from: 'random' },
+    });
 
-    return () => { intro.kill(); window.clearTimeout(timer); };
+    // Phase 3 — curtain rises just as the tiles come to rest
+    tl.to(root, {
+      yPercent: -100,
+      duration: 0.85,
+      ease: 'power3.inOut',
+      onStart: () => window.dispatchEvent(new CustomEvent('loaderDone')),
+      onComplete: () => setHidden(true),
+    });
   }, []);
 
   if (hidden) return null;
 
   return (
     <div ref={rootRef} className={styles.loader} aria-hidden="true">
-      <div ref={linesRef} className={styles.title}>
-        <span className={styles.line}><span className={styles.lineInner} data-line-inner>Halo</span></span>
-        <span className={styles.line}><em className={styles.lineInner} data-line-inner>Ring</em></span>
+      {/* Floema-style scattered collage */}
+      <div className={styles.collage}>
+        {TILES.map((tile, i) => (
+          <div
+            key={i}
+            ref={(el) => { tilesRef.current[i] = el; }}
+            className={styles.tile}
+            style={{
+              left: `${tile.left}%`,
+              top: `${tile.top}%`,
+              width: `${tile.w}px`,
+              height: `${Math.round(tile.w * 0.7)}px`,
+            }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={tile.img ?? IMAGES[i % IMAGES.length]} alt="" />
+          </div>
+        ))}
       </div>
 
-      <div className={styles.stage}>
-        <div ref={ringRef} className={styles.ring}>
-          <svg viewBox="0 0 260 180" width="260" height="180" aria-hidden="true">
-            <defs>
-              <linearGradient id="loaderRing" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stopColor="#3a3a42" />
-                <stop offset="0.5" stopColor="#141418" />
-                <stop offset="1" stopColor="#050507" />
-              </linearGradient>
-            </defs>
-            <ellipse
-              cx="130" cy="90" rx="104" ry="60"
-              fill="none" stroke="url(#loaderRing)" strokeWidth="34"
-            />
-            <ellipse
-              cx="130" cy="84" rx="104" ry="60"
-              fill="none" stroke="rgba(255,255,255,0.10)" strokeWidth="2"
-            />
-          </svg>
-        </div>
-        <div ref={shadowRef} className={styles.shadow} />
-      </div>
+      <p className={styles.phrase}>
+        {WORDS.map((word, i) => (
+          <span
+            key={word}
+            ref={(el) => { wordsRef.current[i] = el; }}
+            className={i >= ITALIC_FROM ? styles.moment : styles.now}
+          >
+            {word}{i < WORDS.length - 1 ? ' ' : ''}
+          </span>
+        ))}
+      </p>
     </div>
   );
 }

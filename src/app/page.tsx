@@ -8,6 +8,7 @@ import FeaturesScene from '@/components/FeaturesScene';
 import SpecsScene from '@/components/SpecsScene';
 import OrderScene from '@/components/OrderScene';
 import ProductGallery from '@/components/ProductGallery';
+import SiteFooter from '@/components/SiteFooter';
 
 const ScrollRingExperience = dynamic(
   () => import('@/components/ScrollRingExperience'),
@@ -40,6 +41,9 @@ export default function Home() {
 
       {/* S7 — ORDER */}
       <OrderScene />
+
+      {/* FOOTER */}
+      <SiteFooter />
     </main>
   );
 }
